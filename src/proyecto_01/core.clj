@@ -757,8 +757,16 @@
 ; (;ERROR: -: Wrong type in arg2 A)
 
 ;;Aca adentro tengo que preguntar si el argumento es un numero. Por eso tiene que devolver Wrong type
+
+
 (defn fnc-restar [entrada]
-  "Resta los elementos de un lista."
+(cond
+  (empty? entrada) "(;ERROR: -: Wrong number of args given)"
+  (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
+  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (= 1 (count entrada)) (nth (map - entrada) 0)
+  :else (reduce - entrada)
+)
 )
 
 
