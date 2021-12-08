@@ -36,8 +36,15 @@
 (is (= 12 (fnc-sumar '(3 4 5))))
 (is (= 18 (fnc-sumar '(3 4 5 6))))
 )
+(testing "Caso lista vacia")
+(is (= 0 (fnc-sumar ())))
 
+(testing "Caso tipo incorrecto")
+(is (= "(;ERROR: +: Wrong type in arg1 A)" (fnc-sumar '(A 4 5 6))))
+(is (= "(;ERROR: +: Wrong type in arg2 A)" (fnc-sumar '(3 A 5 6))))
+(is (= "(;ERROR: +: Wrong type in arg2 A)" (fnc-sumar '(3 4 A 6))))
 )
+
 
 
 

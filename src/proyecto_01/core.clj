@@ -724,8 +724,19 @@
 ; (;ERROR: +: Wrong type in arg2 A)
 ; user=> (fnc-sumar '(3 4 A 6))
 ; (;ERROR: +: Wrong type in arg2 A)
+;;(defn fnc-sumar [entrada]
+
+  ;;(map number? entrada)
+  ;;(reduce + entrada)
+;;)
+
 (defn fnc-sumar [entrada]
-  (reduce + entrada)
+(cond
+  (empty? entrada) 0
+  (= false(nth (map number? entrada) 0 )) "(;ERROR: +: Wrong type in arg1 A)"
+  (some false? (map number? entrada)) "(;ERROR: +: Wrong type in arg2 A)"
+  :else (reduce + entrada)
+)
 )
 
 ; user=> (fnc-restar ())
