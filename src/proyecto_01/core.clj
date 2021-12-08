@@ -824,7 +824,14 @@
 ; user=> (fnc-mayor '(3 2 A 1))
 ; (;ERROR: >: Wrong type in arg2 A)
 (defn fnc-mayor [entrada]
-  "Devuelve #t si los numeros de una lista estan en orden estrictamente decreciente; si no, #f."
+  (cond
+  (empty? entrada) (symbol "#t")
+  (= 1 (count entrada)) (symbol "#t")
+    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
+  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (apply > entrada) (symbol "#t")
+  :else (symbol "#f")
+)
 )
 
 ; user=> (fnc-mayor-o-igual ())
