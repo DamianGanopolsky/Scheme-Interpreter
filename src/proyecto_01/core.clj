@@ -770,11 +770,6 @@
 )
 
 
-;;Esta seria la parte semantica
-(defn fnc-multiplicar [entrada]
-  "Multiplicar los elementos de un lista."
-)
-
 ; user=> (fnc-menor ())
 ; #t
 ; user=> (fnc-menor '(1))
@@ -795,8 +790,16 @@
 ; (;ERROR: <: Wrong type in arg2 A)
 ; user=> (fnc-menor '(1 2 A 4))
 ; (;ERROR: <: Wrong type in arg2 A)
+;;"Devuelve #t si los numeros de una lista estan en orden estrictamente creciente; si no, #f."
+
+
+
+
 (defn fnc-menor [entrada]
-  "Devuelve #t si los numeros de una lista estan en orden estrictamente creciente; si no, #f."
+(cond
+  (empty? entrada) (symbol "#f")
+  :else "asd"
+)
 )
 
 ; user=> (fnc-mayor ())

@@ -83,33 +83,37 @@
 
 
 
-;;(deftest saludar-test
+; user=> (fnc-menor ())
+; #t
+; user=> (fnc-menor '(1))
+; #t
+; user=> (fnc-menor '(1 2))
+; #t
+; user=> (fnc-menor '(1 2 3))
+; #t
+; user=> (fnc-menor '(1 2 3 4))
+; #t
+; user=> (fnc-menor '(1 2 2 4))
+; #f
+; user=> (fnc-menor '(1 2 1 4))
+; #f
+; user=> (fnc-menor '(A 1 2 4))
+; (;ERROR: <: Wrong type in arg1 A)
+; user=> (fnc-menor '(1 A 1 4))
+; (;ERROR: <: Wrong type in arg2 A)
+; user=> (fnc-menor '(1 2 A 4))
+; (;ERROR: <: Wrong type in arg2 A)
 
-    ;;(testing "Test del valor de retorno"
-    ;;(is (= nil (saludar "Diego"))
-    ;;(is )))
+(deftest fnc-menor-test
+
+(testing "Prueba de la funcion: fnc-restar-test"
+;;((is  (= (list(symbol "#t")) (fnc-menor ())))
+(is (= (symbol "#f") (fnc-menor ())))
+)
+)
 
 
-  ;;  (testing "Test del efecto colateral"
-    ;;    (let [res (with-out-str (saludar "Diego"))]
-      ;;  (is (= res "Hola Diego\r\n"))
-       ;; )
-    ;;)
-;;)
-;; \r\n hay que poner en windows en vez de \n
 
-;;Es una funcion pura, no muestr apor la consola nada
-;;(deftest calcular-test
-
-  ;;  (testing "Varias aserciones"
-    
-    ;;    (is (= 4 (calcular 3)))
-      ;;  (is (= 5 (calcular 4)))
-        ;;(is (= 6 (calcular 5))
-    
-   ;; )
-
-;;)
 
 ;;Hacer deftest nombreDelaFuncion-test
 ;;Adentro de cada deftest de la func, poner los distintos testings, cada testing es una situacion distinta
