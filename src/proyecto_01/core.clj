@@ -622,14 +622,15 @@
    y devuelve el valor asociado. Devuelve un error :unbound-variable si no la encuentra."
 )
 
-; user=> (error? (list (symbol ";ERROR:") 'mal 'hecho))
-; true
-; user=> (error? (list 'mal 'hecho))
-; false
-; user=> (error? (list (symbol ";WARNING:") 'mal 'hecho))
-; true
+
+
+;"Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
 (defn error?  [entrada]
-  "Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
+  (cond
+  (= (nth entrada 0) (symbol ";WARNING:")) true
+  (= (nth entrada 0) (symbol ";ERROR:")) true
+  :else false
+  )
 )
 
 ; user=> (proteger-bool-en-str "(or #F #f #t #T)")
