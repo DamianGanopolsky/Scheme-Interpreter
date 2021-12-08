@@ -674,22 +674,7 @@
   "Devuelve el resultado de fusionar listas."
 )
 
-; user=> (fnc-equal? ())
-; #t
-; user=> (fnc-equal? '(A))
-; #t
-; user=> (fnc-equal? '(A a))
-; #t
-; user=> (fnc-equal? '(A a A))
-; #t
-; user=> (fnc-equal? '(A a A a))
-; #t
-; user=> (fnc-equal? '(A a A B))
-; #f
-; user=> (fnc-equal? '(1 1 1 1))
-; #t
-; user=> (fnc-equal? '(1 1 2 1))
-; #f
+
 ;Convierto la lista a string, la paso a mayusculas y la termino convirtiendo en secuencia para poder
 ;applicarle apply
 (defn fnc-equal? [entrada]
@@ -717,27 +702,7 @@
   "Devuelve la lectura de un elemento de Scheme desde la terminal/consola."
 )
 
-; user=> (fnc-sumar ())
-; 0
-; user=> (fnc-sumar '(3))
-; 3
-; user=> (fnc-sumar '(3 4))
-; 7
-; user=> (fnc-sumar '(3 4 5))
-; 12
-; user=> (fnc-sumar '(3 4 5 6))
-; 18
-; user=> (fnc-sumar '(A 4 5 6))
-; (;ERROR: +: Wrong type in arg1 A)
-; user=> (fnc-sumar '(3 A 5 6))
-; (;ERROR: +: Wrong type in arg2 A)
-; user=> (fnc-sumar '(3 4 A 6))
-; (;ERROR: +: Wrong type in arg2 A)
-;;(defn fnc-sumar [entrada]
 
-  ;;(map number? entrada)
-  ;;(reduce + entrada)
-;;)
 
 (defn fnc-sumar [entrada]
 (cond
@@ -748,24 +713,6 @@
 )
 )
 
-; user=> (fnc-restar ())
-; (;ERROR: -: Wrong number of args given)
-; user=> (fnc-restar '(3))
-; -3
-; user=> (fnc-restar '(3 4))
-; -1
-; user=> (fnc-restar '(3 4 5))
-; -6
-; user=> (fnc-restar '(3 4 5 6))
-; -12
-; user=> (fnc-restar '(A 4 5 6))
-; (;ERROR: -: Wrong type in arg1 A)
-; user=> (fnc-restar '(3 A 5 6))
-; (;ERROR: -: Wrong type in arg2 A)
-; user=> (fnc-restar '(3 4 A 6))
-; (;ERROR: -: Wrong type in arg2 A)
-
-;;Aca adentro tengo que preguntar si el argumento es un numero. Por eso tiene que devolver Wrong type
 
 
 (defn fnc-restar [entrada]
@@ -779,27 +726,6 @@
 )
 
 
-; user=> (fnc-menor ())
-; #t
-; user=> (fnc-menor '(1))
-; #t
-; user=> (fnc-menor '(1 2))
-; #t
-; user=> (fnc-menor '(1 2 3))
-; #t
-; user=> (fnc-menor '(1 2 3 4))
-; #t
-; user=> (fnc-menor '(1 2 2 4))
-; #f
-; user=> (fnc-menor '(1 2 1 4))
-; #f
-; user=> (fnc-menor '(A 1 2 4))
-; (;ERROR: <: Wrong type in arg1 A)
-; user=> (fnc-menor '(1 A 1 4))
-; (;ERROR: <: Wrong type in arg2 A)
-; user=> (fnc-menor '(1 2 A 4))
-; (;ERROR: <: Wrong type in arg2 A)
-;;"Devuelve #t si los numeros de una lista estan en orden estrictamente creciente; si no, #f."
 
 
 (defn fnc-menor [entrada]
@@ -812,26 +738,8 @@
   :else (symbol "#f")
 )
 )
-; user=> (fnc-mayor ())
-; #t
-; user=> (fnc-mayor '(1))
-; #t
-; user=> (fnc-mayor '(2 1))
-; #t
-; user=> (fnc-mayor '(3 2 1))
-; #t
-; user=> (fnc-mayor '(4 3 2 1))
-; #t
-; user=> (fnc-mayor '(4 2 2 1))
-; #f
-; user=> (fnc-mayor '(4 2 1 4))
-; #f
-; user=> (fnc-mayor '(A 3 2 1))
-; (;ERROR: >: Wrong type in arg1 A)
-; user=> (fnc-mayor '(3 A 2 1))
-; (;ERROR: >: Wrong type in arg2 A)
-; user=> (fnc-mayor '(3 2 A 1))
-; (;ERROR: >: Wrong type in arg2 A)
+
+
 (defn fnc-mayor [entrada]
   (cond
   (empty? entrada) (symbol "#t")
@@ -843,27 +751,7 @@
 )
 )
 
-; user=> (fnc-mayor-o-igual ())
-; #t
-; user=> (fnc-mayor-o-igual '(1))
-; #t
-; user=> (fnc-mayor-o-igual '(2 1))
-; #t
-; user=> (fnc-mayor-o-igual '(3 2 1))
-; #t
-; user=> (fnc-mayor-o-igual '(4 3 2 1))
-; #t
-; user=> (fnc-mayor-o-igual '(4 2 2 1))
-; #t
-; user=> (fnc-mayor-o-igual '(4 2 1 4))
-; #f
-; user=> (fnc-mayor-o-igual '(A 3 2 1))
-; (;ERROR: >=: Wrong type in arg1 A)
-; user=> (fnc-mayor-o-igual '(3 A 2 1))
-; (;ERROR: >=: Wrong type in arg2 A)
-; user=> (fnc-mayor-o-igual '(3 2 A 1))
-; (;ERROR: >=: Wrong type in arg2 A)
-;"Devuelve #t si los numeros de una lista estan en orden decreciente; si no, #f."
+
 (defn fnc-mayor-o-igual [entrada]
  (cond
   (empty? entrada) (symbol "#t")

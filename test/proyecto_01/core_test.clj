@@ -233,3 +233,22 @@
 (is (= (symbol "#f") (fnc-equal? '(1 1 2 1))))
 )
 )
+
+
+
+; user=> (error? (list (symbol ";ERROR:") 'mal 'hecho))
+; true
+; user=> (error? (list 'mal 'hecho))
+; false
+; user=> (error? (list (symbol ";WARNING:") 'mal 'hecho))
+; true
+
+;"Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
+
+(deftest error?-test 
+  (testing "Prueba de la funcion: fnc-error"
+(is (= true (error? (list (symbol ";ERROR:") 'mal 'hecho))))
+(is (= false (error? (list 'mal 'hecho))))
+(is (= true (error? (list (symbol ";WARNING:") 'mal 'hecho))))
+  )
+)
