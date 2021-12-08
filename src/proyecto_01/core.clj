@@ -803,7 +803,6 @@
   :else (symbol "#f")
 )
 )
-(println (apply < '(1 2 3)))
 ; user=> (fnc-mayor ())
 ; #t
 ; user=> (fnc-mayor '(1))
