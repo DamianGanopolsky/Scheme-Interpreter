@@ -854,8 +854,17 @@
 ; (;ERROR: >=: Wrong type in arg2 A)
 ; user=> (fnc-mayor-o-igual '(3 2 A 1))
 ; (;ERROR: >=: Wrong type in arg2 A)
+;"Devuelve #t si los numeros de una lista estan en orden decreciente; si no, #f."
 (defn fnc-mayor-o-igual [entrada]
-  "Devuelve #t si los numeros de una lista estan en orden decreciente; si no, #f."
+ (cond
+  (empty? entrada) (symbol "#t")
+  (= 1 (count entrada)) (symbol "#t")
+    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
+  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (apply >= entrada) (symbol "#t")
+  :else (symbol "#f")
+)
+  
 )
 
 ; user=> (evaluar-escalar 32 '(x 6 y 11 z "hola"))
