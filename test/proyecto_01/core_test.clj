@@ -190,7 +190,7 @@
 
 (deftest fnc-mayor-o-igual-test
 
-(testing "Prueba de la funcion: fnc-mayor-test"
+(testing "Prueba de la funcion: fnc-mayor-o-igual-test"
 (is (= (symbol "#t") (fnc-mayor-o-igual ())))
 (is (= (symbol "#t") (fnc-mayor-o-igual '(1))))
 (is (= (symbol "#t") (fnc-mayor-o-igual '(2 1))))
@@ -201,5 +201,35 @@
 (is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-mayor-o-igual '(A 3 2 1))))
 (is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 A 2 1))))
 (is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 2 A 1))))
+)
+)
+
+
+; user=> (fnc-equal? ())
+; #t
+; user=> (fnc-equal? '(A))
+; #t
+; user=> (fnc-equal? '(A a))
+; #t
+; user=> (fnc-equal? '(A a A))
+; #t
+; user=> (fnc-equal? '(A a A a))
+; #t
+; user=> (fnc-equal? '(A a A B))
+; #f
+; user=> (fnc-equal? '(1 1 1 1))
+; #t
+; user=> (fnc-equal? '(1 1 2 1))
+; #f
+(deftest fnc-equal?-test 
+(testing "Prueba de la funcion: fnc-equal"
+(is (= (symbol "#t") (fnc-equal? ())))
+(is (= (symbol "#t") (fnc-equal? '(A))))
+(is (= (symbol "#t") (fnc-equal? '(A a))))
+(is (= (symbol "#t") (fnc-equal? '(A a A))))
+(is (= (symbol "#t") (fnc-equal? '(A a A a))))
+(is (= (symbol "#f") (fnc-equal? '(A a A B))))
+(is (= (symbol "#t") (fnc-equal? '(1 1 1 1))))
+(is (= (symbol "#f") (fnc-equal? '(1 1 2 1))))
 )
 )

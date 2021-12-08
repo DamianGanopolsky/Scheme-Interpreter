@@ -690,8 +690,17 @@
 ; #t
 ; user=> (fnc-equal? '(1 1 2 1))
 ; #f
+;Convierto la lista a string, la paso a mayusculas y la termino convirtiendo en secuencia para poder
+;applicarle apply
 (defn fnc-equal? [entrada]
-  "Compara elementos. Si son iguales, devuelve #t. Si no, #f."
+( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
+(cond
+  (empty? entrada) (symbol "#t")
+  (= 1 (count entrada)) (symbol "#t")
+  (apply = converted) (symbol "#t")
+  :else (symbol "#f")
+)
+)
 )
 
 ; user=> (fnc-read ())
