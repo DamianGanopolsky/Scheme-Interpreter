@@ -164,3 +164,42 @@
 ;;Hacer deftest nombreDelaFuncion-test
 ;;Adentro de cada deftest de la func, poner los distintos testings, cada testing es una situacion distinta
 
+
+
+; user=> (fnc-mayor-o-igual ())
+; #t
+; user=> (fnc-mayor-o-igual '(1))
+; #t
+; user=> (fnc-mayor-o-igual '(2 1))
+; #t
+; user=> (fnc-mayor-o-igual '(3 2 1))
+; #t
+; user=> (fnc-mayor-o-igual '(4 3 2 1))
+; #t
+; user=> (fnc-mayor-o-igual '(4 2 2 1))
+; #t
+; user=> (fnc-mayor-o-igual '(4 2 1 4))
+; #f
+; user=> (fnc-mayor-o-igual '(A 3 2 1))
+; (;ERROR: >=: Wrong type in arg1 A)
+; user=> (fnc-mayor-o-igual '(3 A 2 1))
+; (;ERROR: >=: Wrong type in arg2 A)
+; user=> (fnc-mayor-o-igual '(3 2 A 1))
+; (;ERROR: >=: Wrong type in arg2 A)
+
+
+(deftest fnc-mayor-o-igual-test
+
+(testing "Prueba de la funcion: fnc-mayor-test"
+(is (= (symbol "#t") (fnc-mayor-o-igual ())))
+(is (= (symbol "#t") (fnc-mayor-o-igual '(1))))
+(is (= (symbol "#t") (fnc-mayor-o-igual '(2 1))))
+(is (= (symbol "#t") (fnc-mayor-o-igual '(3 2 1))))
+(is (= (symbol "#t") (fnc-mayor-o-igual '(4 3 2 1))))
+(is (= (symbol "#t") (fnc-mayor-o-igual '(4 2 2 1))))
+(is (= (symbol "#f") (fnc-mayor-o-igual '(4 2 1 4))))
+(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-mayor-o-igual '(A 3 2 1))))
+(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 A 2 1))))
+(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 2 A 1))))
+)
+)
