@@ -725,7 +725,7 @@
 ; user=> (fnc-sumar '(3 4 A 6))
 ; (;ERROR: +: Wrong type in arg2 A)
 (defn fnc-sumar [entrada]
-  "Suma los elementos de una lista."
+  (reduce + entrada)
 )
 
 ; user=> (fnc-restar ())
