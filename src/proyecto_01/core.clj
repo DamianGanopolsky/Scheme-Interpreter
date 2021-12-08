@@ -793,15 +793,17 @@
 ;;"Devuelve #t si los numeros de una lista estan en orden estrictamente creciente; si no, #f."
 
 
-
-
 (defn fnc-menor [entrada]
 (cond
-  (empty? entrada) (symbol "#f")
-  :else "asd"
+  (empty? entrada) (symbol "#t")
+  (= 1 (count entrada)) (symbol "#t")
+    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
+  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (apply < entrada) (symbol "#t")
+  :else (symbol "#f")
 )
 )
-
+(println (apply < '(1 2 3)))
 ; user=> (fnc-mayor ())
 ; #t
 ; user=> (fnc-mayor '(1))

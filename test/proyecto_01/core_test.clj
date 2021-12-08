@@ -108,7 +108,16 @@
 
 (testing "Prueba de la funcion: fnc-restar-test"
 ;;((is  (= (list(symbol "#t")) (fnc-menor ())))
-(is (= (symbol "#f") (fnc-menor ())))
+(is (= (symbol "#t") (fnc-menor ())))
+(is (= (symbol "#t") (fnc-menor '(1))))
+(is (= (symbol "#t") (fnc-menor '(1 2))))
+(is (= (symbol "#t") (fnc-menor '(1 2 3))))
+(is (= (symbol "#t") (fnc-menor '(1 2 3 4))))
+(is (= (symbol "#f") (fnc-menor '(1 2 2 4))))
+(is (= (symbol "#f") (fnc-menor '(1 2 1 4))))
+(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-menor '(A 4 5 6))))
+(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-menor '(3 A 5 6))))
+(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-menor '(3 4 A 6))))
 )
 )
 
