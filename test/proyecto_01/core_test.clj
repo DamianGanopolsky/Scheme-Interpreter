@@ -252,3 +252,26 @@
 (is (= true (error? (list (symbol ";WARNING:") 'mal 'hecho))))
   )
 )
+
+
+
+
+
+; user=> (verificar-parentesis "(hola 'mundo")
+; 1
+; user=> (verificar-parentesis "(hola '(mundo)))")
+; -1
+; user=> (verificar-parentesis "(hola '(mundo) () 6) 7)")
+; -1
+; user=> (verificar-parentesis "(hola '(mundo) () 6) 7) 9)")
+; -1
+; user=> (verificar-parentesis "(hola '(mundo) )")
+; 0
+
+;; ()()(), devuelve 0, esta bien
+;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
+(deftest verificar-parentesis-test 
+ (testing "Prueba de la funcion: verificar-parentesis"
+(is (= true (verificar-parentesis '(2 3))))
+)
+)

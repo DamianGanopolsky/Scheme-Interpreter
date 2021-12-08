@@ -596,8 +596,9 @@
 
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
+;"Cuenta los parentesis en una cadena, sumando 1 si `(`, restando 1 si `)`. Si el contador se hace negativo, para y retorna -1."
 (defn verificar-parentesis [entrada]
-  "Cuenta los parentesis en una cadena, sumando 1 si `(`, restando 1 si `)`. Si el contador se hace negativo, para y retorna -1."
+  (= 4 4)
 )
 
 ; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
