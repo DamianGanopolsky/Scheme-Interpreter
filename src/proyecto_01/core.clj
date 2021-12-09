@@ -701,7 +701,11 @@
 ; (;ERROR: append: Wrong type in arg A)
 ;"Devuelve el resultado de fusionar listas."
 (defn fnc-append [entrada]
-  (apply concat entrada)
+( cond
+  (some false? (map list? entrada))   (str "(;ERROR: -: Wrong type in arg " (nth entrada (.indexOf (map list? entrada) false)) ")")
+  :else (apply concat entrada)
+)
+  
 )
 
 

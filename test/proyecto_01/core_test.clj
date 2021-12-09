@@ -282,7 +282,20 @@
 )
 
 
+
+
+; user=> (fnc-append '( (1 2) (3) (4 5) (6 7)))
+; (1 2 3 4 5 6 7)
+; user=> (fnc-append '( (1 2) 3 (4 5) (6 7)))
+; (;ERROR: append: Wrong type in arg 3)
+; user=> (fnc-append '( (1 2) A (4 5) (6 7)))
+; (;ERROR: append: Wrong type in arg A)
+;"Devuelve el resultado de fusionar listas."
 (deftest fnc-append-test 
   (testing "Prueba de la funcion: append")
   (is (= '(1 2 3 4 5 6 7) (fnc-append '( (1 2) (3) (4 5) (6 7)))))
+  (is (= "(;ERROR: -: Wrong type in arg 3)" (fnc-append '( (1 2) 3 (4 5) (6 7)))))
+  (is (= "(;ERROR: -: Wrong type in arg A)" (fnc-append '( (1 2) A (4 5) (6 7)))))
 )
+
+
