@@ -600,10 +600,14 @@
 )
 
 (defn balanceado? [lista, contador,i, n]
+;(spy "i aca es" i)
+;(spy "contador es" contador)
+;(spy "lista" lista)
+;(spy "total es" n)
   (cond
   (= contador -1) (- 0 1)
-  (= n i) (contador)
-
+  (= n i) contador
+  
   (= "(" (nth lista i)) (balanceado? lista (+ contador 1) (+ i 1) n)
 
   (= ")" (nth lista i)) (balanceado? lista (- contador 1) (+ i 1) n)
