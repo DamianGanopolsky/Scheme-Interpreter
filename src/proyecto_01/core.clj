@@ -594,11 +594,27 @@
 ; user=> (verificar-parentesis "(hola '(mundo) )")
 ; 0
 
+;A partir de un texto, me devuelve cada caracter como elemento de una seq, a excepcion de los espacios
+(defn obtainRawSeq [text]
+(re-seq #"." (clojure.string/replace text #" " ""))
+)
+
+(defn balanceado? [lista, contador,i, n]
+  (cond
+  (= contador -1) (- 0 1)
+  (= n i) (contador)
+
+  (= "(" (nth lista i)) (balanceado? lista (+ contador 1) (+ i 1) n)
+
+  (= ")" (nth lista i)) (balanceado? lista (- contador 1) (+ i 1) n)
+  :else (balanceado? lista contador (+ i 1) n))
+  )
+
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
 ;"Cuenta los parentesis en una cadena, sumando 1 si `(`, restando 1 si `)`. Si el contador se hace negativo, para y retorna -1."
-(defn verificar-parentesis [entrada]
-  (= 4 4)
+(defn verificar-parentesis [texto]
+  (balanceado? (obtainRawSeq texto) 0 0 (count (obtainRawSeq texto)))
 )
 
 ; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)

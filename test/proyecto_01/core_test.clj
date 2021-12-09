@@ -270,8 +270,59 @@
 
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
+;"Cuenta los parentesis en una cadena, sumando 1 si `(`, restando 1 si `)`. Si el contador se hace negativo, para y retorna -1."
 (deftest verificar-parentesis-test 
  (testing "Prueba de la funcion: verificar-parentesis"
-(is (= true (verificar-parentesis '(2 3))))
+(is (= 1 (verificar-parentesis "(hola 'mundo")))
+(is (= -1 (verificar-parentesis "(hola '(mundo)))")))
+(is (= -1 (verificar-parentesis "(hola '(mundo) () 6) 7)")))
+(is (= -1 (verificar-parentesis "(hola '(mundo) () 6) 7) 9)")))
+(is (= 0 (verificar-parentesis "(hola '(mundo) )")))
 )
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defn obtainRawSeq [text]
+(re-seq #"." (clojure.string/replace text #" " ""))
+)
+
+(defn balanceado? [lista, contador,i, n]
+  (cond
+  (= contador -1) (- 0 1)
+  (= n i) (contador)
+
+  (= "(" (nth lista i)) (balanceado? lista (+ contador 1) (+ i 1) n)
+
+  (= ")" (nth lista i)) (balanceado? lista (- contador 1) (+ i 1) n)
+  :else (balanceado? lista contador (+ i 1) n))
+  )
+
+(println(balanceado? (obtainRawSeq "(hola '(mundo)))") 0 0 15))
+
+
+;(println(= "(" (nth (obtainRawSeq "(hola '(mundo)))") 0)))
+
+;(println(nth (obtainRawSeq "(hola '(mundo)))") 0))
+
+
+(defn verificar-parentesis [texto]
+  (balanceado? (obtainRawSeq texto) 0 0 (count (obtainRawSeq texto)))
+)
+
+(println( verificar-parentesis "(hola '(mundo)))" ))
+
+;(println (obtainRawSeq "(hola '(mundo)))"))
+;(println(nth (obtainRawSeq "(hola '(mundo)))") 1))
