@@ -594,6 +594,8 @@
 ; user=> (verificar-parentesis "(hola '(mundo) )")
 ; 0
 
+;                     Funciones auxiliares para verificar-parentesis
+
 ;A partir de un texto, me devuelve cada caracter como elemento de una seq, a excepcion de los espacios
 (defn obtainRawSeq [text]
 (re-seq #"." (clojure.string/replace text #" " ""))
@@ -606,13 +608,18 @@
 ;(spy "total es" n)
   (cond
   (= contador -1) (- 0 1)
-  (= n i) contador
+
+  (and (= n i) (= contador 0) ) (+ 0 0)
+
+  (and (= n i) (> contador 0) ) (+ 0 1)
   
   (= "(" (nth lista i)) (balanceado? lista (+ contador 1) (+ i 1) n)
 
   (= ")" (nth lista i)) (balanceado? lista (- contador 1) (+ i 1) n)
   :else (balanceado? lista contador (+ i 1) n))
   )
+
+;                       Fin funciones auxiliares
 
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
