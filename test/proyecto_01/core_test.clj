@@ -280,3 +280,9 @@
 (is (= 0 (verificar-parentesis "(hola '(mundo) )")))
 )
 )
+
+
+(deftest fnc-append-test 
+  (testing "Prueba de la funcion: append")
+  (is (= '(1 2 3 4 5 6 7) (fnc-append '( (1 2) (3) (4 5) (6 7)))))
+)

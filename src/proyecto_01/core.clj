@@ -699,8 +699,9 @@
 ; (;ERROR: append: Wrong type in arg 3)
 ; user=> (fnc-append '( (1 2) A (4 5) (6 7)))
 ; (;ERROR: append: Wrong type in arg A)
+;"Devuelve el resultado de fusionar listas."
 (defn fnc-append [entrada]
-  "Devuelve el resultado de fusionar listas."
+  (apply concat entrada)
 )
 
 
