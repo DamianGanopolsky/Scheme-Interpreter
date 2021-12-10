@@ -322,7 +322,7 @@
 ;#t
 
 ;Si es lista con lista, compara miembro a miebro y hace un and.
-;Si son 2 constantes, compara de modo insensitiva
+;Si son 2 simbolos (e.g: 'if o 'foo), compara de modo insensitiva
 ;si son 2 strings, compara sensitive
 (deftest igual?-test
 (testing "Prueba de la funcion: igual")
