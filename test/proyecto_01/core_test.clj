@@ -309,10 +309,33 @@
 ; false
 ; user=> (igual? 6 "6")
 ; false
+;> (equal? '(a (b) c) '(A (B) C))
+;#t
+
+;> (equal? "asd" "ASD")
+;#f
+
+;> (equal? (list "asd" 5) (list "ASD" 5))
+;#f
+
+;> (equal? (list "asd" 5) (list "asd" 5))
+;#t
+
+;Si es lista con lista, compara miembro a miebro y hace un and.
+;Si son 2 constantes, compara de modo insensitiva
+;si son 2 strings, compara sensitive
 (deftest igual?-test
 (testing "Prueba de la funcion: igual")
 
 (is (= true (igual? 'if 'IF)))
+(is (= true (igual? 'if 'if)))
+(is (= true (igual? 'IF 'IF)))
+(is (= false (igual? 'IF "IF")))
+(is (= true (igual? '(a (b) c) '(A (B) C) )))
+(is (= false (igual? "asd" "ASD")))
+(is (= false (igual? (list "asd" 5) (list "ASD" 5))))
+(is (= true (igual? (list "asd" 5) (list "asd" 5) )))
+
 
 )
 

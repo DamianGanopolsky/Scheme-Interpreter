@@ -691,7 +691,12 @@
 ; false
 ; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
 (defn igual? [elemento1, elemento2]
-  (= 4 4)
+
+( let [converted (re-seq #"\w+" (clojure.string/upper-case elemento1) )
+converted2 (re-seq #"\w+" (clojure.string/upper-case elemento2))
+]
+  (= converted converted2)
+)
 )
 
 ; user=> (fnc-append '( (1 2) (3) (4 5) (6 7)))
