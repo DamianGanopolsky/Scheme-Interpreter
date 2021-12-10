@@ -636,9 +636,8 @@
 ; (a 1 b 2 c 3)
 ; user=> (actualizar-amb () 'b 7)
 ; (b 7)
-(defn actualizar-amb [entrada]
-  "Devuelve un ambiente actualizado con una clave (nombre de la variable o funcion) y su valor. 
-  Si el valor es un error, el ambiente no se modifica. De lo contrario, se le carga o reemplaza la nueva informacion."
+(defn actualizar-amb [ambiente, clave, valor]
+  true
 )
 
 ; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))

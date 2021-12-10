@@ -352,6 +352,21 @@
 (testing "Prueba de la funcion: buscar")
 (is (= 3 (buscar 'c '(a 1 b 2 c 3 d 4 e 5))))
 (is (= "(;ERROR: unbound variable: f)" (buscar 'f '(a 1 b 2 c 3 d 4 e 5))))
-
 )
 
+
+
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
+; (a 1 b 2 c 3 d 4)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
+; (a 1 b 4 c 3)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
+; (a 1 b 2 c 3)
+; user=> (actualizar-amb () 'b 7)
+; (b 7)
+;  "Devuelve un ambiente actualizado con una clave (nombre de la variable o funcion) y su valor. 
+;  Si el valor es un error, el ambiente no se modifica. De lo contrario, se le carga o reemplaza la nueva informacion."
+(deftest actualizar-amb-test
+(testing "Prueba de la funcion: actualizar-amb")
+(is (= true (actualizar-amb 1 2 3)))
+)
