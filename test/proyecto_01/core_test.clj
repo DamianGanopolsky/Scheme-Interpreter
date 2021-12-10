@@ -340,3 +340,18 @@
 
 )
 
+
+; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))
+; 3
+; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
+; (;ERROR: unbound variable: f)
+  ;"Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...]
+   ;y devuelve el valor asociado. Devuelve un error :unbound-variable si no la encuentra."
+
+(deftest buscar-test 
+(testing "Prueba de la funcion: buscar")
+(is (= 3 (buscar 'c '(a 1 b 2 c 3 d 4 e 5))))
+(is (= "(;ERROR: unbound variable: f)" (buscar 'f '(a 1 b 2 c 3 d 4 e 5))))
+
+)
+

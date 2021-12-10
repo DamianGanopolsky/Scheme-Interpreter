@@ -645,9 +645,16 @@
 ; 3
 ; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
 ; (;ERROR: unbound variable: f)
-(defn buscar [entrada]
-  "Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...]
-   y devuelve el valor asociado. Devuelve un error :unbound-variable si no la encuentra."
+(defn in? 
+  "true si la lista contiene el elemento"
+  [coll elm]  
+  (some #(= elm %) coll))
+
+(defn buscar [clave, ambiente]
+(cond
+  (nil? (in? (take-nth 2 ambiente) clave)) (str "(;ERROR: unbound variable: "clave")")
+  :else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
+)
 )
 
 
