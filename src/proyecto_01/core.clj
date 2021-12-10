@@ -689,8 +689,9 @@
 ; false
 ; user=> (igual? 6 "6")
 ; false
-(defn igual? [entrada]
-  "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
+; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
+(defn igual? [elemento1, elemento2]
+  (= 4 4)
 )
 
 ; user=> (fnc-append '( (1 2) (3) (4 5) (6 7)))

@@ -299,3 +299,20 @@
 )
 
 
+; user=> (igual? 'if 'IF)
+; true
+; user=> (igual? 'if 'if)
+; true
+; user=> (igual? 'IF 'IF)
+; true
+; user=> (igual? 'IF "IF")
+; false
+; user=> (igual? 6 "6")
+; false
+(deftest igual?-test
+(testing "Prueba de la funcion: igual")
+
+(is (= true (igual? 'if 'IF)))
+
+)
+
