@@ -690,14 +690,47 @@
 ; user=> (igual? 6 "6")
 ; false
 ; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
-(defn igual? [elemento1, elemento2]
 
-( let [converted (re-seq #"\w+" (clojure.string/upper-case elemento1) )
-converted2 (re-seq #"\w+" (clojure.string/upper-case elemento2))
-]
-  (= converted converted2)
+
+(defn igual? [atomo1, atomo2]
+
+( let [converted (re-seq #"\w+" (clojure.string/upper-case atomo1) )
+converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
+(cond
+
+  (and (string? atomo1) (symbol? atomo2)) false
+  (and (symbol? atomo1) (string? atomo2)) false
+  (and (string? atomo1) (string? atomo2)) (= atomo1 atomo2)
+  (and (number? atomo1) (string? atomo2)) false
+  (and (string? atomo1) (number? atomo2)) false
+  :else (= converted converted2)
 )
 )
+)
+
+;(defn igual-recursivo? [elemento1, elemento2, n, i]
+;(cond
+ ; (= n i) (true)
+  ;(= false (igu? (nth elemento1 i) (nth elemento2 i))) (false) 
+  ;(and (string? (nth elemento1 i)) (symbol? (nth elemento2 i))) (false)
+  ;(and (symbol? (nth elemento1 i)) (string? (nth elemento2 i))) (false)
+  ;(and (string? (nth elemento1 i)) (string? (nth elemento2 i))) (= (nth elemento1 i) (nth elemento2 i))
+  
+  ;(and (and (list? elemento1) (list? elemento2)) (= (count elemento1) (count elemento2))) 
+  ;(igual-recursivo? elemento1 elemento2 (count elemento1) 0)
+
+  ;:else (igual-recursivo? elemento1 elemento2 n (+ i 1))
+;)
+;)
+
+;(defn igual? [elemento1, elemento2]
+;(cond
+ ; (and (and (list? elemento1) (list? elemento2)) (= (count elemento1) (count elemento2))) 
+ ; (igual-recursivo? elemento1 elemento2 (count elemento1) 0)
+  
+  ;:else (igu? elemento1 elemento2)
+;)
+;)
 
 ; user=> (fnc-append '( (1 2) (3) (4 5) (6 7)))
 ; (1 2 3 4 5 6 7)
