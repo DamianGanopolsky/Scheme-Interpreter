@@ -645,16 +645,16 @@
 
 (defn buscarUtil [clave, ambiente]
 (cond
-  (nil? (in? (take-nth 2 ambiente) clave)) 0
-  :else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
+  (nil? (in? (take-nth 2 ambiente) clave)) -1
+  :else   (.indexOf (take-nth 2 ambiente) clave)
 )
 )
-;;FIN FAUX
+
 
 (defn actualizar-amb [ambiente, clave, valor]
 (cond
-  (= 0(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
-  (< 0 (buscarUtil clave ambiente)) "Actualizo"
+  (= -1(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
+  (< -1 (buscarUtil clave ambiente)) (apply list(assoc (into [] ambiente) (+ 1 (.indexOf ambiente clave)) valor))
   :else "Error"
 )
 )

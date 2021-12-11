@@ -369,4 +369,5 @@
 (deftest actualizar-amb-test
 (testing "Prueba de la funcion: actualizar-amb")
 (is (= '(a 1 b 2 c 3 d 4) (actualizar-amb '(a 1 b 2 c 3) 'd 4)))
+(is (= '(a 1 b 4 c 3) (actualizar-amb '(a 1 b 2 c 3) 'b 4)))
 )
