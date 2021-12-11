@@ -637,6 +637,7 @@
 ; user=> (actualizar-amb () 'b 7)
 ; (b 7)
 ;;FAUX
+; Clase: "Los errores son listas que tienen en la primera posicion el simbolo de error"
 (defn in? 
   "true si la lista contiene el elemento"
   [coll elm]  
@@ -653,7 +654,7 @@
 
 (defn actualizar-amb [ambiente, clave, valor]
 (cond
-  (list? valor) ambiente
+  (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
   (= -1(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
   (< -1 (buscarUtil clave ambiente)) (apply list(assoc (into [] ambiente) (+ 1 (.indexOf ambiente clave)) valor))
   :else ambiente

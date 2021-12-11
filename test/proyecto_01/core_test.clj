@@ -366,6 +366,7 @@
 ; (b 7)
 ;  "Devuelve un ambiente actualizado con una clave (nombre de la variable o funcion) y su valor. 
 ;  Si el valor es un error, el ambiente no se modifica. De lo contrario, se le carga o reemplaza la nueva informacion."
+
 (deftest actualizar-amb-test
 (testing "Prueba de la funcion: actualizar-amb")
 (is (= '(a 1 b 2 c 3 d 4) (actualizar-amb '(a 1 b 2 c 3) 'd 4)))
