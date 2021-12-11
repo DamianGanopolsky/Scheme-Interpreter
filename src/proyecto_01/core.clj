@@ -699,8 +699,18 @@
 ; (and (or #F #f #t #T) #T)
 ; user=> (restaurar-bool (read-string "(and (or %F %f %t %T) %T)") )
 ; (and (or #F #f #t #T) #T)
+;"Cambia, en un codigo leido con read-string, %t por #t y %f por #f (y sus respectivas versiones en mayusculas)."
+
+
+
+;Le paso la cadena protegida, leida como read string. Lo primero que hago es convertir esa entrada a string,
+;reemplazando todos los %F,%T,... por :%F,:%T, despues hago el read string. Teniendo los :%F,:%T,...
+;puedo usar el prewalk-replace para reemplazar con los simbolos correspondientes.
+
 (defn restaurar-bool [entrada]
-  "Cambia, en un codigo leido con read-string, %t por #t y %f por #f (y sus respectivas versiones en mayusculas)."
+(clojure.walk/prewalk-replace {:%F (symbol "#F") :%f (symbol "#f") :%T (symbol "#T") :%t (symbol "#t")}
+(read-string (clojure.string/replace entrada #"%F|%T|%f|%t" 
+{"%F" ":%F" "%T" ":%T" "%f" ":%f" "%t" ":%t"})))  
 )
 
 ; user=> (igual? 'if 'IF)

@@ -389,3 +389,24 @@
 (is (= "(and (or %F %f %t %T) %T)" (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))
 (is (= "" (proteger-bool-en-str "")))
 )
+
+
+
+; user=> (restaurar-bool (read-string (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))
+; (and (or #F #f #t #T) #T)
+; user=> (restaurar-bool (read-string "(and (or %F %f %t %T) %T)") )
+; (and (or #F #f #t #T) #T)
+;"Cambia, en un codigo leido con read-string, %t por #t y %f por #f (y sus respectivas versiones en mayusculas)."
+
+(deftest restaurar-bool-test
+(testing "Prueba de la funcion: restaurar-bool")
+(is (= (list 'or (symbol "#F") (symbol "#f") (symbol "#t") (symbol "#T") ) 
+(restaurar-bool (read-string "(or %F %f %t %T)"))))
+
+(is (= (list 'and (list 'or (symbol "#F") (symbol "#f") (symbol "#t") (symbol "#T")) (symbol "#T"))  
+(restaurar-bool (read-string "(and (or %F %f %t %T) %T)"))))
+
+(is (= (list 'and (list 'or (symbol "#F") (symbol "#f") (symbol "#t") (symbol "#T")) (symbol "#T"))  
+(restaurar-bool (read-string (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))))
+)
+
