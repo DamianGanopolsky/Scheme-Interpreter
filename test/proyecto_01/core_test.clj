@@ -368,5 +368,5 @@
 ;  Si el valor es un error, el ambiente no se modifica. De lo contrario, se le carga o reemplaza la nueva informacion."
 (deftest actualizar-amb-test
 (testing "Prueba de la funcion: actualizar-amb")
-(is (= true (actualizar-amb 1 2 3)))
+(is (= '(a 1 b 2 c 3 d 4) (actualizar-amb '(a 1 b 2 c 3) 'd 4)))
 )

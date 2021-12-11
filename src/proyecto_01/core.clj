@@ -636,18 +636,34 @@
 ; (a 1 b 2 c 3)
 ; user=> (actualizar-amb () 'b 7)
 ; (b 7)
+;;FAUX
+(defn in? 
+  "true si la lista contiene el elemento"
+  [coll elm]  
+  (some #(= elm %) coll))
+
+
+(defn buscarUtil [clave, ambiente]
+(cond
+  (nil? (in? (take-nth 2 ambiente) clave)) 0
+  :else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
+)
+)
+;;FIN FAUX
+
 (defn actualizar-amb [ambiente, clave, valor]
-  true
+(cond
+  (= 0(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
+  (< 0 (buscarUtil clave ambiente)) "Actualizo"
+  :else "Error"
+)
 )
 
 ; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))
 ; 3
 ; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
 ; (;ERROR: unbound variable: f)
-(defn in? 
-  "true si la lista contiene el elemento"
-  [coll elm]  
-  (some #(= elm %) coll))
+
 
 (defn buscar [clave, ambiente]
 (cond
