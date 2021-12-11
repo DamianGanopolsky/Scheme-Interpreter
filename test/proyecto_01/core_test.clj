@@ -373,3 +373,19 @@
 (is (= '(a 1 b 2 c 3) (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))))
 (is (= '(b 7) (actualizar-amb () 'b 7)))
 )
+
+
+
+; user=> (proteger-bool-en-str "(or #F #f #t #T)")
+; "(or %F %f %t %T)"
+; user=> (proteger-bool-en-str "(and (or #F #f #t #T) #T)")
+; "(and (or %F %f %t %T) %T)"
+; user=> (proteger-bool-en-str "")
+; ""
+;"Cambia, en una cadena, #t por %t y #f por %f (y sus respectivas versiones en mayusculas), para poder aplicarle read-string."
+(deftest proteger-bool-en-str-test
+(testing "Prueba de la funcion: proteger-bool-en-str")
+(is (= "(or %F %f %t %T)" (proteger-bool-en-str "(or #F #f #t #T)")))
+(is (= "(and (or %F %f %t %T) %T)" (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))
+(is (= "" (proteger-bool-en-str "")))
+)
