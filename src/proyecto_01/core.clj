@@ -653,9 +653,10 @@
 
 (defn actualizar-amb [ambiente, clave, valor]
 (cond
+  (list? valor) ambiente
   (= -1(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
   (< -1 (buscarUtil clave ambiente)) (apply list(assoc (into [] ambiente) (+ 1 (.indexOf ambiente clave)) valor))
-  :else "Error"
+  :else ambiente
 )
 )
 
