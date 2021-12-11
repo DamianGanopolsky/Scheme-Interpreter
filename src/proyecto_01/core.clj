@@ -588,9 +588,26 @@
   ; "Lee una cadena desde la terminal/consola. Si contiene parentesis de menos al presionar Enter/Intro, 
   ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
    ;se la devuelve completa (si corresponde, advirtiendo previamente que hay parentesis de mas)."
+
+
+(defn leer-entrada-recursivo [entradaAnterior iteracion]
+(let [newLine (read-line)]
+(cond 
+
+(and (= 0 (verificar-parentesis (str entradaAnterior newLine))) (> iteracion 0)) (str entradaAnterior " " newLine)
+(and (= 0 (verificar-parentesis (str entradaAnterior newLine))) (= iteracion 0)) (str entradaAnterior newLine)
+(and (= 1 (verificar-parentesis (str entradaAnterior newLine))) (> iteracion 0)) (leer-entrada-recursivo (str entradaAnterior " " newLine) (+ 1 iteracion))
+(and (= 1 (verificar-parentesis (str entradaAnterior newLine))) (= iteracion 0)) (leer-entrada-recursivo (str entradaAnterior newLine) (+ 1 iteracion))
+(> 0 (verificar-parentesis (str entradaAnterior newLine))) "error"
+)
+)
+)
+
+
 (defn leer-entrada []
-(let [newline (read-line)]
-newline)
+
+(leer-entrada-recursivo "" 0)
+
 )
 
 
