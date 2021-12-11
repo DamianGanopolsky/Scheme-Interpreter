@@ -158,6 +158,7 @@
          ;
          ;
          ;
+         ;Clase: Aca van a estar los que vamos a hacer nosotros: evaluar-or, evaluar-define, etc
 
 	    	  :else (let [res-eval-1 (evaluar (first expre) amb),
              						 res-eval-2 (reduce (fn [x y] (let [res-eval-3 (evaluar y (first x))] (cons (second res-eval-3) (concat (next x) (list (first res-eval-3)))))) (cons (list (second res-eval-1)) (next expre)))]
@@ -574,12 +575,23 @@
 
 
 
+;Clase: Lee la entrada como una string. 
+;(hola$enter
+;mundo)$enter
+;se devuelve como "hola mundo" con un espacio entre palabras
 
-(defn leer-entrada [entrada]
-  "Lee una cadena desde la terminal/consola. Si los parentesis no estan correctamente balanceados al presionar Enter/Intro,
-   se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, se la devuelve completa."
+;  "Lee una cadena desde la terminal/consola. Si los parentesis no estan correctamente balanceados 
+  ;al presionar Enter/Intro,
+  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
+   ;se la devuelve completa."
+
+  ; "Lee una cadena desde la terminal/consola. Si contiene parentesis de menos al presionar Enter/Intro, 
+  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
+   ;se la devuelve completa (si corresponde, advirtiendo previamente que hay parentesis de mas)."
+(defn leer-entrada []
+(let [newline (read-line)]
+newline)
 )
-
 
 
 
@@ -936,6 +948,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (5 (#f #f #t #t))
 ; user=> (evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
 ; (#f (#f #f #t #t))
+
+
 (defn evaluar-or [entrada]
   "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
 )

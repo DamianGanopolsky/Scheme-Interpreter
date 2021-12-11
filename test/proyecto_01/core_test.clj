@@ -411,3 +411,11 @@
 (restaurar-bool (read-string (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))))
 )
 
+
+
+
+(deftest leer-entrada-test
+(testing "Prueba de la funcion: leer-entrada")
+(is (= "Hola" (leer-entrada)))
+)
+
