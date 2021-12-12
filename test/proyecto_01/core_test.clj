@@ -483,7 +483,58 @@
 
 (is (= (list (symbol "#f") (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
 (evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+)
 
+
+; user=> (evaluar-if '(if 1 2) '(n 7))
+; (2 (n 7))
+; user=> (evaluar-if '(if 1 n) '(n 7))
+; (7 (n 7))
+; user=> (evaluar-if '(if 1 n 8) '(n 7))
+; (7 (n 7))
+; user=> (evaluar-if (list 'if (symbol "#f") 'n) (list 'n 7 (symbol "#f") (symbol "#f")))
+; (#<unspecified> (n 7 #f #f))
+; user=> (evaluar-if (list 'if (symbol "#f") 'n 8) (list 'n 7 (symbol "#f") (symbol "#f")))
+; (8 (n 7 #f #f))
+; user=> (evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))
+; (#<unspecified> (n 9 #f #f))
+; user=> (evaluar-if '(if) '(n 7))
+; ((;ERROR: if: missing or extra expression (if)) (n 7))
+;(Se le pasaron 0 argumentos, error)
+; user=> (evaluar-if '(if 1) '(n 7))
+; ((;ERROR: if: missing or extra expression (if 1)) (n 7))
+;(Se le paso solo 1 elemento)
+
+
+(deftest evaluar-if-test
+(testing "Prueba de la forma especial evaluar if")
+
+(is (= (list '2 (list 'n '7)) 
+(evaluar-if '(if 1 2) '(n 7))))
+
+(is (= (list '7 (list 'n '7)) 
+(evaluar-if '(if 1 n) '(n 7))))
+
+
+(is (= (list (generar-mensaje-error :missing-or-extra 'if (list 'if)) (list 'n '7)) 
+(evaluar-if '(if) '(n 7))))
+
+(is (= (list (generar-mensaje-error :missing-or-extra 'if (list 'if '1)) (list 'n '7)) 
+(evaluar-if '(if 1) '(n 7))))
+
+
+
+
+
+
+;(is (= (list 2 (list 'n 7))) (evaluar-if '(if 1) '(n 7)))
+
+
+;(is (= (list 2 (list 'n 7))) (evaluar-if '(if 1 2) '(n 7)))
+;(is (= (list 7 (list 'n 7))) (evaluar-if '(if 1 n) '(n 7)))
+;(is (= (list 7 (list 'n 7))) (evaluar-if '(if 1 n 8) '(n 7)))
 
 )
+
+
 

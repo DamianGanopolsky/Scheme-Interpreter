@@ -984,8 +984,30 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; user=> (evaluar-if '(if 1) '(n 7))
 ; ((;ERROR: if: missing or extra expression (if 1)) (n 7))
 ;(Se le paso solo 1 elemento)
-(defn evaluar-if [entrada]
-  "Evalua una expresion `if`. Devuelve una lista con el resultado y un ambiente eventualmente modificado."
+
+;"Evalua una expresion `if`. Devuelve una lista con el resultado y un ambiente eventualmente modificado."
+(defn evaluar-if [expresion, ambiente]
+
+  (cond
+  (or (< (count expresion) 3) (> (count expresion) 4))
+  (list (generar-mensaje-error :missing-or-extra 'if expresion) ambiente)
+
+  :else (cond
+    (= (count expresion) 3) 
+      (cond
+        (= 4 4) (evaluar (nth expresion 2) ambiente)
+        :else "unspecified"
+      )
+
+    :else 
+      (cond
+        (= 4 4) "evaluo 4"
+        :else "unspecified"
+
+      )
+  )
+
+)
 )
 
 ; user=> (evaluar-or (list 'or) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
