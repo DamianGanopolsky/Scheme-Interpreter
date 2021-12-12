@@ -1001,7 +1001,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
     :else 
       (cond
-        (= 4 4) "evaluo 4"
+        (= 4 4) (evaluar (nth expresion 2) ambiente)
         :else "unspecified"
 
       )

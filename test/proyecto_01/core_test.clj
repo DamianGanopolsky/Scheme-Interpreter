@@ -515,6 +515,9 @@
 (is (= (list '7 (list 'n '7)) 
 (evaluar-if '(if 1 n) '(n 7))))
 
+(is (= (list '7 (list 'n '7)) 
+(evaluar-if '(if 1 n 8) '(n 7))))
+
 
 (is (= (list (generar-mensaje-error :missing-or-extra 'if (list 'if)) (list 'n '7)) 
 (evaluar-if '(if) '(n 7))))
