@@ -145,6 +145,7 @@
   [expre amb]
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
       (list expre amb)                                      ; de lo contrario, evaluarla
+      ;SI NO SE CUMPLE LO DEL IF, ENTRA AL COND
       (cond
         (not (seq? expre))             (evaluar-escalar expre amb)
 
@@ -932,6 +933,15 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
 )
 
+;Ejemplo consultas:
+;(define (f x) (+ x 1))
+
+;Se puede ver como:(lambda (x) (+ x 1))
+
+;Evaluandola con 6: (f 6)
+;( (lambda (x) (+ x 1)) 6)
+;7
+
 
 ; user=> (evaluar-define '(define x 2) '(x 1))
 ; (#<unspecified> (x 2))
@@ -949,6 +959,9 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; ((;ERROR: define: bad variable (define () 2)) (x 1))
 ; user=> (evaluar-define '(define 2 x) '(x 1))
 ; ((;ERROR: define: bad variable (define 2 x)) (x 1))
+; Otro test que se comento en las consultas:
+; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
 (defn evaluar-define [entrada]
   "Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
 )
@@ -967,8 +980,10 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (#<unspecified> (n 9 #f #f))
 ; user=> (evaluar-if '(if) '(n 7))
 ; ((;ERROR: if: missing or extra expression (if)) (n 7))
+;(Se le pasaron 0 argumentos, error)
 ; user=> (evaluar-if '(if 1) '(n 7))
 ; ((;ERROR: if: missing or extra expression (if 1)) (n 7))
+;(Se le paso solo 1 elemento)
 (defn evaluar-if [entrada]
   "Evalua una expresion `if`. Devuelve una lista con el resultado y un ambiente eventualmente modificado."
 )
@@ -983,10 +998,31 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (5 (#f #f #t #t))
 ; user=> (evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
 ; (#f (#f #f #t #t))
+; "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
 
+(defn or-recursivo [expresionOr, iteracion, n]
 
-(defn evaluar-or [entrada]
-  "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
+;(spy "iteracion es" iteracion)
+;(spy "n es" n)
+;(spy "expresionOr es" expresionOr)
+(cond
+  (= iteracion n) (symbol "#f")
+  :else (cond
+    (= (symbol "#f") (nth expresionOr iteracion) ) (or-recursivo expresionOr (+ iteracion 1) n)
+    :else (nth expresionOr iteracion)
+  )
+)
+)
+
+;Evaluo hasta que aparezca uno distinto de false
+(defn evaluar-or [expresionOr, ambiente]
+
+(cond
+  (= (count expresionOr) 1) (list (symbol "#f") ambiente) 
+  (= (count expresionOr) 2) (list (nth expresionOr 1) ambiente)
+  :else (list (or-recursivo expresionOr 1 (count expresionOr)) ambiente) 
+)
+  
 )
 
 ; user=> (evaluar-set! '(set! x 1) '(x 0))

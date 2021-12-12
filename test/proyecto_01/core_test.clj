@@ -440,7 +440,7 @@
 ; ((;ERROR: unbound variable: n) (x 6 y 11 z "hola"))
 
 (deftest evaluar-escalar-test
-(testing "Prueba de la funcion evaluar escalar")
+(testing "Prueba de la forma especial evaluar escalar")
 (is (= (list '32 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar '32 '(x 6 y 11 z "hola"))))
 (is (= (list "chau" (list 'x '6 'y '11 'z "hola")) (evaluar-escalar "chau" '(x 6 y 11 z "hola"))))
 (is (= (list '11 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 'y '(x 6 y 11 z "hola"))))
@@ -450,4 +450,40 @@
 
 )
 
+
+
+; user=> (evaluar-or (list 'or) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
+; (#f (#f #f #t #t))
+; user=> (evaluar-or (list 'or (symbol "#t")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
+; (#t (#f #f #t #t))
+; user=> (evaluar-or (list 'or 7) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
+; (7 (#f #f #t #t))
+; user=> (evaluar-or (list 'or (symbol "#f") 5) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
+; (5 (#f #f #t #t))
+; user=> (evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
+; (#f (#f #f #t #t))
+; "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
+
+
+(deftest evaluar-or-test
+(testing "Prueba de la forma especial evaluar or")
+(is (= (list (symbol "#f") (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
+(evaluar-or (list 'or) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+
+(is (= (list (symbol "#t") (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
+(evaluar-or (list 'or (symbol "#t")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+
+(is (= (list 7 (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
+(evaluar-or (list 'or 7) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+
+
+(is (= (list 5 (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
+(evaluar-or (list 'or (symbol "#f") 5) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+
+
+(is (= (list (symbol "#f") (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
+(evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
+
+
+)
 
