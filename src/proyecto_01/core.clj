@@ -995,14 +995,14 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
   :else (cond
     (= (count expresion) 3) 
       (cond
-        (= 4 4) (evaluar (nth expresion 2) ambiente)
-        :else "unspecified"
+        (= (symbol "#f") (nth expresion 1)) (list (symbol "#<unspecified>") ambiente) 
+        :else  (evaluar (nth expresion 2) ambiente)
       )
 
     :else 
       (cond
-        (= 4 4) (evaluar (nth expresion 2) ambiente)
-        :else "unspecified"
+        (= (symbol "#f") (nth expresion 1)) (evaluar (nth expresion 3) ambiente)
+        :else (evaluar (nth expresion 2) ambiente)
 
       )
   )
