@@ -829,8 +829,9 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (;ERROR: Wrong number of args given #<primitive-procedure read>)
 ; user=> (fnc-read '(1 2 3))
 ; (;ERROR: Wrong number of args given #<primitive-procedure read>)
-(defn fnc-read [entrada]
-  "Devuelve la lectura de un elemento de Scheme desde la terminal/consola."
+;"Devuelve la lectura de un elemento de Scheme desde la terminal/consola."
+(defn fnc-read []
+  (read-string (leer-entrada))
 )
 
 

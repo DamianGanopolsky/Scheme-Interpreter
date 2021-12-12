@@ -421,3 +421,9 @@
 ;(is (= "Hola" (leer-entrada)))
 )
 
+
+(deftest fnc-read-test
+(testing "Prueba de la funcion: fnc-read")
+;(is (= (list '0 '0) (fnc-read)))
+)
+
