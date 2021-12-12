@@ -575,11 +575,6 @@
 
 
 
-;Clase: Lee la entrada como una string. 
-;(hola$enter
-;mundo)$enter
-;se devuelve como "hola mundo" con un espacio entre palabras
-
 ;  "Lee una cadena desde la terminal/consola. Si los parentesis no estan correctamente balanceados 
   ;al presionar Enter/Intro,
   ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
@@ -598,11 +593,10 @@
 (and (= 0 (verificar-parentesis (str entradaAnterior newLine))) (= iteracion 0)) (str entradaAnterior newLine)
 (and (= 1 (verificar-parentesis (str entradaAnterior newLine))) (> iteracion 0)) (leer-entrada-recursivo (str entradaAnterior " " newLine) (+ 1 iteracion))
 (and (= 1 (verificar-parentesis (str entradaAnterior newLine))) (= iteracion 0)) (leer-entrada-recursivo (str entradaAnterior newLine) (+ 1 iteracion))
-(> 0 (verificar-parentesis (str entradaAnterior newLine))) "error"
+(> 0 (verificar-parentesis (str entradaAnterior newLine))) (symbol ";ERROR:")
 )
 )
 )
-
 
 (defn leer-entrada []
 
@@ -698,7 +692,7 @@
 
 (defn buscar [clave, ambiente]
 (cond
-  (nil? (in? (take-nth 2 ambiente) clave)) (str "(;ERROR: unbound variable: "clave")")
+  (nil? (in? (take-nth 2 ambiente) clave)) (generar-mensaje-error :unbound-variable clave)
   :else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
 )
 )
@@ -805,7 +799,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ;"Devuelve el resultado de fusionar listas."
 (defn fnc-append [entrada]
 ( cond
-  (some false? (map list? entrada))   (str "(;ERROR: -: Wrong type in arg " (nth entrada (.indexOf (map list? entrada) false)) ")")
+   (some false? (map list? entrada)) (generar-mensaje-error :wrong-type-arg 'append (nth entrada (.indexOf (map list? entrada) false)))
   :else (apply concat entrada)
 )
   
@@ -844,8 +838,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 (defn fnc-sumar [entrada]
 (cond
   (empty? entrada) 0
-  (= false(nth (map number? entrada) 0 )) "(;ERROR: +: Wrong type in arg1 A)"
-  (some false? (map number? entrada)) "(;ERROR: +: Wrong type in arg2 A)"
+  (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '+ (nth entrada 0))
+  (some false? (map number? entrada)) (generar-mensaje-error :wrong-type-arg2 '+ (nth entrada 0))
   :else (reduce + entrada)
 )
 )
@@ -855,8 +849,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 (defn fnc-restar [entrada]
 (cond
   (empty? entrada) "(;ERROR: -: Wrong number of args given)"
-  (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
-  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '- (nth entrada 0))
+  (some false? (map number? entrada)) (generar-mensaje-error :wrong-type-arg2 '- (nth entrada 0))
   (= 1 (count entrada)) (nth (map - entrada) 0)
   :else (reduce - entrada)
 )
@@ -869,8 +863,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 (cond
   (empty? entrada) (symbol "#t")
   (= 1 (count entrada)) (symbol "#t")
-    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
-  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+    (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '< (nth entrada 0))
+  (some false? (map number? entrada)) (generar-mensaje-error :wrong-type-arg2 '< (nth entrada 0))
   (apply < entrada) (symbol "#t")
   :else (symbol "#f")
 )
@@ -881,8 +875,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
   (cond
   (empty? entrada) (symbol "#t")
   (= 1 (count entrada)) (symbol "#t")
-    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
-  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+  (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '> (nth entrada 0))
+  (some false? (map number? entrada)) (generar-mensaje-error :wrong-type-arg2 '> (nth entrada 0))
   (apply > entrada) (symbol "#t")
   :else (symbol "#f")
 )
@@ -893,8 +887,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
  (cond
   (empty? entrada) (symbol "#t")
   (= 1 (count entrada)) (symbol "#t")
-    (= false(nth (map number? entrada) 0 )) "(;ERROR: -: Wrong type in arg1 A)"
-  (some false? (map number? entrada)) "(;ERROR: -: Wrong type in arg2 A)"
+    (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '>= (nth entrada 0))
+  (some false? (map number? entrada)) (generar-mensaje-error :wrong-type-arg2 '>= (nth entrada 0))
   (apply >= entrada) (symbol "#t")
   :else (symbol "#f")
 )

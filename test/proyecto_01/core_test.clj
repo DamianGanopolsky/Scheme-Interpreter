@@ -40,9 +40,9 @@
 (is (= 0 (fnc-sumar ())))
 
 (testing "Caso tipo incorrecto")
-(is (= "(;ERROR: +: Wrong type in arg1 A)" (fnc-sumar '(A 4 5 6))))
-(is (= "(;ERROR: +: Wrong type in arg2 A)" (fnc-sumar '(3 A 5 6))))
-(is (= "(;ERROR: +: Wrong type in arg2 A)" (fnc-sumar '(3 4 A 6))))
+(is (= (list (symbol ";ERROR: +:") 'Wrong 'type 'in 'arg1 'A)) (fnc-sumar '(A 4 5 6)))
+(is (= (list (symbol ";ERROR: +:") 'Wrong 'type 'in 'arg2 'A)) (fnc-sumar '(3 A 5 6)))
+(is (= (list (symbol ";ERROR: +:") 'Wrong 'type 'in 'arg2 'A)) (fnc-sumar '(3 4 A 6)))
 )
 
 
@@ -76,9 +76,9 @@
 (is (= "(;ERROR: -: Wrong number of args given)" (fnc-restar ())))
 
 (testing "Caso tipo incorrecto")
-(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-restar '(A 4 5 6))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-restar '(3 A 5 6))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-restar '(3 4 A 6))))
+(is (= (list (symbol ";ERROR: -:") 'Wrong 'type 'in 'arg1 'A)) (fnc-restar '(A 4 5 6)))
+(is (= (list (symbol ";ERROR: -:") 'Wrong 'type 'in 'arg2 'A)) (fnc-restar '(3 A 5 6)))
+(is (= (list (symbol ";ERROR: -:") 'Wrong 'type 'in 'arg2 'A)) (fnc-restar '(3 4 A 6)))
 )
 
 
@@ -115,9 +115,9 @@
 (is (= (symbol "#t") (fnc-menor '(1 2 3 4))))
 (is (= (symbol "#f") (fnc-menor '(1 2 2 4))))
 (is (= (symbol "#f") (fnc-menor '(1 2 1 4))))
-(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-menor '(A 4 5 6))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-menor '(3 A 5 6))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-menor '(3 4 A 6))))
+(is (= (list (symbol ";ERROR: <:") 'Wrong 'type 'in 'arg1 'A)) (fnc-menor '(A 1 2 4)))
+(is (= (list (symbol ";ERROR: <:") 'Wrong 'type 'in 'arg2 'A)) (fnc-menor '(1 A 1 4)))
+(is (= (list (symbol ";ERROR: <:") 'Wrong 'type 'in 'arg2 'A)) (fnc-menor '(1 2 A 4)))
 )
 )
 
@@ -153,9 +153,9 @@
 (is (= (symbol "#t") (fnc-mayor '(4 3 2 1))))
 (is (= (symbol "#f") (fnc-mayor '(4 2 2 1))))
 (is (= (symbol "#f") (fnc-mayor '(4 2 1 4))))
-(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-mayor '(A 3 2 1))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor '(3 A 2 1))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor '(3 2 A 1))))
+(is (= (list (symbol ";ERROR: >:") 'Wrong 'type 'in 'arg1 'A)) (fnc-mayor '(A 3 2 1)))
+(is (= (list (symbol ";ERROR: >:") 'Wrong 'type 'in 'arg2 'A)) (fnc-mayor '(3 A 2 1)))
+(is (= (list (symbol ";ERROR: >:") 'Wrong 'type 'in 'arg2 'A)) (fnc-mayor '(3 2 A 1)))
 )
 )
 
@@ -198,9 +198,9 @@
 (is (= (symbol "#t") (fnc-mayor-o-igual '(4 3 2 1))))
 (is (= (symbol "#t") (fnc-mayor-o-igual '(4 2 2 1))))
 (is (= (symbol "#f") (fnc-mayor-o-igual '(4 2 1 4))))
-(is (= "(;ERROR: -: Wrong type in arg1 A)" (fnc-mayor-o-igual '(A 3 2 1))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 A 2 1))))
-(is (= "(;ERROR: -: Wrong type in arg2 A)" (fnc-mayor-o-igual '(3 2 A 1))))
+(is (= (list (symbol ";ERROR: >=:") 'Wrong 'type 'in 'arg1 'A)) (fnc-mayor-o-igual '(A 3 2 1)))
+(is (= (list (symbol ";ERROR: >=:") 'Wrong 'type 'in 'arg2 'A)) (fnc-mayor-o-igual '(3 A 2 1)))
+(is (= (list (symbol ";ERROR: >=:") 'Wrong 'type 'in 'arg2 'A)) (fnc-mayor-o-igual '(3 2 A 1)))
 )
 )
 
@@ -294,8 +294,9 @@
 (deftest fnc-append-test 
   (testing "Prueba de la funcion: append")
   (is (= '(1 2 3 4 5 6 7) (fnc-append '( (1 2) (3) (4 5) (6 7)))))
-  (is (= "(;ERROR: -: Wrong type in arg 3)" (fnc-append '( (1 2) 3 (4 5) (6 7)))))
-  (is (= "(;ERROR: -: Wrong type in arg A)" (fnc-append '( (1 2) A (4 5) (6 7)))))
+
+  (is (= (generar-mensaje-error :wrong-type-arg 'append '3) (fnc-append '( (1 2) 3 (4 5) (6 7)))))
+  (is (= (generar-mensaje-error :wrong-type-arg 'append 'A) (fnc-append '( (1 2) A (4 5) (6 7)))))
 )
 
 
@@ -351,7 +352,8 @@
 (deftest buscar-test 
 (testing "Prueba de la funcion: buscar")
 (is (= 3 (buscar 'c '(a 1 b 2 c 3 d 4 e 5))))
-(is (= "(;ERROR: unbound variable: f)" (buscar 'f '(a 1 b 2 c 3 d 4 e 5))))
+(is (= (list (symbol ";ERROR:") 'unbound (symbol "variable:") 'f) (buscar 'f '(a 1 b 2 c 3 d 4 e 5))))
+
 )
 
 
@@ -416,6 +418,6 @@
 
 (deftest leer-entrada-test
 (testing "Prueba de la funcion: leer-entrada")
-(is (= "Hola" (leer-entrada)))
+;(is (= "Hola" (leer-entrada)))
 )
 
