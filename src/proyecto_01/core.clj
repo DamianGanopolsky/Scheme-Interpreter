@@ -896,6 +896,16 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
   
 )
 
+
+;BUSCAr:
+;; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))
+; 3
+; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
+; (;ERROR: unbound variable: f)
+  ;"Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...]
+   ;y devuelve el valor asociado. Devuelve un error :unbound-variable si no la encuentra."
+
+
 ; user=> (evaluar-escalar 32 '(x 6 y 11 z "hola"))
 ; (32 (x 6 y 11 z "hola"))
 ; user=> (evaluar-escalar "chau" '(x 6 y 11 z "hola"))
@@ -906,9 +916,22 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; ("hola" (x 6 y 11 z "hola"))
 ; user=> (evaluar-escalar 'n '(x 6 y 11 z "hola"))
 ; ((;ERROR: unbound variable: n) (x 6 y 11 z "hola"))
-(defn evaluar-escalar [entrada]
-  "Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
+
+
+  ;"Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
+(defn evaluar-escalar [escalar, ambiente]
+(cond
+
+(and (symbol? escalar) (nil? (in? (take-nth 2 ambiente) escalar))) 
+(list (generar-mensaje-error :unbound-variable escalar) ambiente)
+(symbol? escalar) (list (buscar escalar ambiente) ambiente)
+
+:else (list escalar ambiente)
+
 )
+
+)
+
 
 ; user=> (evaluar-define '(define x 2) '(x 1))
 ; (#<unspecified> (x 2))

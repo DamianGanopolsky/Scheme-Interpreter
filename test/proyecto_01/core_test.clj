@@ -427,3 +427,27 @@
 ;(is (= (list '0 '0) (fnc-read)))
 )
 
+
+; user=> (evaluar-escalar 32 '(x 6 y 11 z "hola"))
+; (32 (x 6 y 11 z "hola"))
+; user=> (evaluar-escalar "chau" '(x 6 y 11 z "hola"))
+; ("chau" (x 6 y 11 z "hola"))
+; user=> (evaluar-escalar 'y '(x 6 y 11 z "hola"))
+; (11 (x 6 y 11 z "hola"))
+; user=> (evaluar-escalar 'z '(x 6 y 11 z "hola"))
+; ("hola" (x 6 y 11 z "hola"))
+; user=> (evaluar-escalar 'n '(x 6 y 11 z "hola"))
+; ((;ERROR: unbound variable: n) (x 6 y 11 z "hola"))
+
+(deftest evaluar-escalar-test
+(testing "Prueba de la funcion evaluar escalar")
+(is (= (list '32 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar '32 '(x 6 y 11 z "hola"))))
+(is (= (list "chau" (list 'x '6 'y '11 'z "hola")) (evaluar-escalar "chau" '(x 6 y 11 z "hola"))))
+(is (= (list '11 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 'y '(x 6 y 11 z "hola"))))
+(is (= (list "hola" (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 'z '(x 6 y 11 z "hola"))))
+(is (= (list (generar-mensaje-error :unbound-variable 'n) '(x 6 y 11 z "hola")) (evaluar-escalar 'n '(x 6 y 11 z "hola"))))
+
+
+)
+
+
