@@ -1081,6 +1081,28 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; ((;ERROR: set!: bad variable 1) (x 0))
 ;"Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
 
+
+(defn evaluar-set! [expresion, ambiente]
+(cond
+
+(or (< (count expresion) 3) (> (count expresion) 3))
+(list (generar-mensaje-error :missing-or-extra 'set! expresion) ambiente)
+
+(= false (symbol? (nth expresion 1))) 
+(list (generar-mensaje-error :bad-variable 'set! (nth expresion 1)) ambiente)
+
+(= -1(buscarUtil (nth expresion 1) ambiente )) 
+(list (generar-mensaje-error :unbound-variable (nth expresion 1)) ambiente)
+
+
+:else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
+;(list (symbol "#<unspecified>") (list 'x '1))
+
+)
+
+  
+)
+
 ; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
 ; (a 1 b 2 c 3 d 4)
 ; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
@@ -1095,19 +1117,6 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
 ; user=> (evaluar-set! '(set! x 1) '(x 0))
 ; (#<unspecified> (x 1))
-(defn evaluar-set! [expresion, ambiente]
-(cond
-
-(= -1(buscarUtil (nth expresion 1) ambiente )) "No encontrada"
-:else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
-;(list (symbol "#<unspecified>") (list 'x '1))
-
-)
-
-  
-)
-
-
 
 
 ;;Opcional:

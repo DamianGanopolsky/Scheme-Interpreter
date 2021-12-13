@@ -619,21 +619,18 @@
   (is (= (list (symbol "#<unspecified>") (list 'x '1))
   (evaluar-set! '(set! x 1) '(x 0))))
 
-; user=> (evaluar-set! '(set! x 1) '())
-; ((;ERROR: unbound variable: x) ())
-  ;(is )
+  (is (= (list (generar-mensaje-error :unbound-variable 'x) '())
+  (evaluar-set! '(set! x 1) '())))
 
 
-; user=> (evaluar-set! '(set! x) '(x 0))
-; ((;ERROR: set!: missing or extra expression (set! x)) (x 0))
+  (is (= (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x)) '(x 0))
+  (evaluar-set! '(set! x) '(x 0))))
 
-  (imprimir (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x)) '(x 0)))
+  (is (= (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x '1 '2)) '(x 0))
+  (evaluar-set! '(set! x 1 2) '(x 0))))
 
-  ;(is (= (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x)) '(x 0))
-  ;(evaluar-set! '(set! x) '(x 0))))
-
-
-
+  (is (= (list (generar-mensaje-error :bad-variable 'set! 1) '(x 0))
+  (evaluar-set! '(set! 1 2) '(x 0))))
 
 )
 
