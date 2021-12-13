@@ -149,13 +149,23 @@
       (cond
         (not (seq? expre))             (evaluar-escalar expre amb)
 
+        (igual? (first expre) 'cond) (evaluar-cond expre amb)
+
         (igual? (first expre) 'define) (evaluar-define expre amb)
 
-        (igual? (first expre) 'set!) (evaluar-set! expre amb)
+        (igual? (first expre) 'exit) (evaluar-exit expre amb)
 
         (igual? (first expre) 'if) (evaluar-if expre amb)
 
+        (igual? (first expre) 'lambda) (evaluar-lambda expre amb)
+
+        (igual? (first expre) 'load) (evaluar-load expre amb)
+
         (igual? (first expre) 'or) (evaluar-or expre amb)
+
+        (igual? (first expre) 'quote) (evaluar-quote expre amb)
+
+        (igual? (first expre) 'set!) (evaluar-set! expre amb)
 
          ;
          ;
