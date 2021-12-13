@@ -979,7 +979,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
   ;(concatenar ambiente 'f '(lambda (x)))
   (concatenar ambiente (nth (nth expresion 1) 0) 
-  (list 'lambda  (list(nth (nth expresion 1) 1)) (nth expresion 2)))
+  (concat(list 'lambda  (list(nth (nth expresion 1) 1))) 
+  (for [i (range 2 (count expresion))] (nth expresion i))))
 )
 
 ; Otro test que se comento en las consultas:
@@ -995,8 +996,6 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
     (and (> (count expresion) 3) (= false (list? (nth expresion 1)))) 
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
-; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
-; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
     (= (nth expresion 1) (list 'f 'x)) 
     (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 

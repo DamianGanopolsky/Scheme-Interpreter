@@ -585,8 +585,8 @@
 
 
 
-  ;(is (= (list (symbol "#<unspecified>") (list 'x '1 'f (list 'lambda '(x) '(+ x 1))))
-  ;(evaluar-define '(define (f x) (+ x 1)) '(x 1))))
+  (is (= (list (symbol "#<unspecified>") (list 'x '1 'f (list 'lambda '(x) '(+ x 1))))
+  (evaluar-define '(define (f x) (+ x 1)) '(x 1))))
 
 
 ; Otro test que se comento en las consultas:
