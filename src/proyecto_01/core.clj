@@ -240,14 +240,38 @@
     ;
 
 ;;Aca se ponen las que hacemos nosotros
+
+    (igual? fnc 'append)  (fnc-append lae)
+
     (igual? fnc 'car) (fnc-car lae)
 
     (igual? fnc 'cdr) (fnc-cdr lae)
 
     (igual? fnc 'cons) (fnc-cons lae)
 
+    (igual? fnc 'display) (fnc-display lae)
 
-    (igual? fnc 'append)  (fnc-append lae)
+    ; ENV
+
+    (igual? fnc 'equal?) (fnc-equal? lae)
+
+    ; EVAL
+
+    (igual? fnc 'length) (fnc-length lae)
+
+    (igual? fnc 'list) (fnc-list lae)
+
+    (igual? fnc 'list?) (fnc-list? lae)
+
+    (igual? fnc 'newline) (fnc-newline lae)
+
+    (igual? fnc 'not) (fnc-not lae)
+
+    (igual? fnc 'null?) (fnc-null? lae)
+
+    (igual? fnc 'read) (fnc-read) ;No le paso lae
+
+    (igual? fnc 'reverse) (fnc-reverse lae)
 
     ;
     ;
