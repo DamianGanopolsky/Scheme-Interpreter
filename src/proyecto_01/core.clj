@@ -153,6 +153,10 @@
 
         (igual? (first expre) 'set!) (evaluar-set! expre amb)
 
+        (igual? (first expre) 'if) (evaluar-if expre amb)
+
+        (igual? (first expre) 'or) (evaluar-or expre amb)
+
          ;
          ;
          ;
@@ -219,7 +223,15 @@
   (cond
 
   ;;Las que tienen simbolos se ponen aca
-    (= fnc '<)            (fnc-menor lae)
+    (= fnc '<) (fnc-menor lae)
+
+    (= fnc '>) (fnc-mayor lae)
+
+    (= fnc '>=) (fnc-mayor-o-igual lae)
+
+    (= fnc '+) (fnc-sumar lae)
+
+    (= fnc '-) (fnc-restar lae)
 
     ;
     ;
@@ -228,6 +240,13 @@
     ;
 
 ;;Aca se ponen las que hacemos nosotros
+    (igual? fnc 'car) (fnc-car lae)
+
+    (igual? fnc 'cdr) (fnc-cdr lae)
+
+    (igual? fnc 'cons) (fnc-cons lae)
+
+
     (igual? fnc 'append)  (fnc-append lae)
 
     ;
