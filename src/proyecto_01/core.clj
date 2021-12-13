@@ -167,6 +167,8 @@
 
         (igual? (first expre) 'set!) (evaluar-set! expre amb)
 
+        ;(igual? (first expre) 'eval) (evaluar-eval expre amb)
+
          ;
          ;
          ;
@@ -262,10 +264,11 @@
     (igual? fnc 'display) (fnc-display lae)
 
     ; ENV
+    (igual? fnc 'env) (fnc-env lae amb) 
 
     (igual? fnc 'equal?) (fnc-equal? lae)
 
-    ; EVAL
+    ; EVAL es un evaluar, no una funcion primitiva
 
     (igual? fnc 'length) (fnc-length lae)
 
