@@ -151,6 +151,8 @@
 
         (igual? (first expre) 'define) (evaluar-define expre amb)
 
+        (igual? (first expre) 'set!) (evaluar-set! expre amb)
+
          ;
          ;
          ;
@@ -1096,7 +1098,6 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
 
 :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
-;(list (symbol "#<unspecified>") (list 'x '1))
 
 )
 

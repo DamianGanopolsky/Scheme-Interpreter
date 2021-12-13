@@ -527,8 +527,11 @@
 (is (= (list '8 (list 'n '7 (symbol "#f") (symbol "#f"))) 
 (evaluar-if (list 'if (symbol "#f") 'n 8) (list 'n 7 (symbol "#f") (symbol "#f")))))
 
-;(is (= (list (symbol "#<unspecified>") (list 'n '9 (symbol "#f") (symbol "#f"))) 
-;(evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))))
+
+; user=> (evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))
+; (#<unspecified> (n 9 #f #f))
+(is (= (list (symbol "#<unspecified>") (list 'n '9 (symbol "#f") (symbol "#f"))) 
+(evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))))
 
 
 (is (= (list (generar-mensaje-error :missing-or-extra 'if (list 'if)) (list 'n '7)) 
