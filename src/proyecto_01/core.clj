@@ -588,6 +588,7 @@
    ;se la devuelve completa (si corresponde, advirtiendo previamente que hay parentesis de mas)."
 
 
+;FUNCION AUXILIAR DE leer-entrada
 (defn leer-entrada-recursivo [entradaAnterior iteracion]
 (let [newLine (read-line)]
 (cond 
@@ -623,10 +624,13 @@
 ;                     Funciones auxiliares para verificar-parentesis
 
 ;A partir de un texto, me devuelve cada caracter como elemento de una seq, a excepcion de los espacios
+
+; FUNCION AUXILIAR DE verificar-parentesis
 (defn obtainRawSeq [text]
 (re-seq #"." (clojure.string/replace text #" " ""))
 )
 
+; FUNCION AUXILIAR DE verificar-parentesis
 (defn balanceado? [lista, contador,i, n]
 ;(spy "i aca es" i)
 ;(spy "contador es" contador)
@@ -650,6 +654,7 @@
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
 ;"Cuenta los parentesis en una cadena, sumando 1 si `(`, restando 1 si `)`. Si el contador se hace negativo, para y retorna -1."
+
 (defn verificar-parentesis [texto]
   (balanceado? (obtainRawSeq texto) 0 0 (count (obtainRawSeq texto)))
 )
@@ -664,12 +669,16 @@
 ; (b 7)
 ;;FAUX
 ; Clase: "Los errores son listas que tienen en la primera posicion el simbolo de error"
+
+; FUNCION AUXILIAR DE in?
 (defn in? 
   "true si la lista contiene el elemento"
   [coll elm]  
   (some #(= elm %) coll))
 
 ;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
+
+; FUNCION AUXILIAR DE ACTUALIZAR-AMB
 (defn buscarUtil [clave, ambiente]
 (cond
   (nil? (in? (take-nth 2 ambiente) clave)) -1
@@ -959,22 +968,14 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
 ;"Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
 
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
-; (a 1 b 2 c 3 d 4)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
-; (a 1 b 4 c 3)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
-; (a 1 b 2 c 3)
-; user=> (actualizar-amb () 'b 7)
-; (b 7)
-; (defn actualizar-amb [ambiente, clave, valor]
 
 
+; FUNCION AUXILIAR DE EVALUAR-DEFINE
 (defn concatenar [ambiente, clave, valor]
   (concat ambiente (list clave valor))
 )
 
-
+; FUNCION AUXILIAR DE EVALUAR-DEFINE
 (defn parseo-lambda [expresion, ambiente]
 
   ;(concatenar ambiente 'f '(lambda (x)))
@@ -1063,11 +1064,9 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (#f (#f #f #t #t))
 ; "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
 
-(defn or-recursivo [expresionOr, iteracion, n]
 
-;(spy "iteracion es" iteracion)
-;(spy "n es" n)
-;(spy "expresionOr es" expresionOr)
+; FUNCION AUXILIAR DE EVALUAR-OR
+(defn or-recursivo [expresionOr, iteracion, n]
 (cond
   (= iteracion n) (symbol "#f")
   :else (cond
@@ -1119,21 +1118,6 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 )
 )
 
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
-; (a 1 b 2 c 3 d 4)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
-; (a 1 b 4 c 3)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
-; (a 1 b 2 c 3)
-; user=> (actualizar-amb () 'b 7)
-; (b 7)
-
-;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
-;(defn buscarUtil [clave, ambiente]
-
-; user=> (evaluar-set! '(set! x 1) '(x 0))
-; (#<unspecified> (x 1))
-
 
 ;;Opcional:
 ; Al terminar de cargar el archivo en el REPL de Clojure, se debe devolver true.
@@ -1141,19 +1125,4 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
 
 
-
-(defn ejemplo []
-(let [mensaje-1 (do (print "Ingrese un numero: ") (flush)),
-n1 (read),
-mensaje-2 (do (print "Ingrese el doble del numero anterior: ") (flush)),
-n2 (read),
-salida (println (str "Ud." (if (es-el-doble? (spy "primer numero ingresado" n1) (spy "segundo num ingresado" n2)) " " " no ") "sabe calcular!"))]
-(do (print "Presione Enter...") (flush) (read-line) (read-line) 'Chau!)))
-(defn es-el-doble? [a b]
-(= (* 2 a) b))
-(defn spy
-([x] (do (prn x) x))
-([msg x] (do (print msg) (print ": ") (prn x) x)))
-
-;; en vez de n1, puedo poner (spy "prim num ing" n1)
 
