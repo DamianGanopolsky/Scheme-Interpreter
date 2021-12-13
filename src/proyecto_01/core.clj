@@ -968,19 +968,37 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; user=> (actualizar-amb () 'b 7)
 ; (b 7)
 ; (defn actualizar-amb [ambiente, clave, valor]
+
+
+(defn concatenar [ambiente, clave, valor]
+  (concat ambiente (list clave valor))
+)
+
+
+(defn parseo-lambda [expresion, ambiente]
+
+  ;(concatenar ambiente 'f '(lambda (x)))
+  (concatenar ambiente (nth (nth expresion 1) 0) 
+  (list 'lambda  (list(nth (nth expresion 1) 1)) (nth expresion 2)))
+)
+
+; Otro test que se comento en las consultas:
+; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
+
 (defn evaluar-define [expresion, ambiente]
   (cond
 
-    (or (< (count expresion) 3) (> (count expresion) 3)) 
+    (< (count expresion) 3)
+    (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
+
+    (and (> (count expresion) 3) (= false (list? (nth expresion 1)))) 
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
 ; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
 ; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
     (= (nth expresion 1) (list 'f 'x)) 
-    (list (symbol "#<unspecified>") 
-    ;(concat (for [i (range (count ambiente))] (nth ambiente i)) '(f) (list 'lambda '(x) (nth expresion 2))))
-
-    (list (nth ambiente 0) (nth ambiente 1) 'f (list 'lambda '(x) (nth expresion 2)))  )
+    (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 
     (= false (symbol? (nth expresion 1))) 
     (list (generar-mensaje-error :bad-variable 'define (nth expresion 1)) ambiente)
@@ -1100,8 +1118,6 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
 
 )
-
-  
 )
 
 ; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)

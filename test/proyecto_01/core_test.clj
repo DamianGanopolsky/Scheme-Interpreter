@@ -575,13 +575,26 @@
   (is (= (list (symbol "#<unspecified>") (list 'x '2))
   (evaluar-define '(define x 2) '(x 1))))
 
+
+; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
+
+
+
+
+
+
+
   ;(is (= (list (symbol "#<unspecified>") (list 'x '1 'f (list 'lambda '(x) '(+ x 1))))
   ;(evaluar-define '(define (f x) (+ x 1)) '(x 1))))
 
 
-  ;(is (= (list (symbol "#<unspecified>") 
-  ;(list 'x '1 'f (list 'lambda '(x) '(display x) '(newline) '(+ x 1))))
-  ;(evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))))
+; Otro test que se comento en las consultas:
+; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
+  (is (= (list (symbol "#<unspecified>") 
+  (list 'x '1 'f (list 'lambda '(x) '(display x) '(newline) '(+ x 1))))
+  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))))
 
   (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define)) '(x 1))
   (evaluar-define '(define) '(x 1))))
