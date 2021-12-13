@@ -540,3 +540,102 @@
 
 
 
+
+; user=> (evaluar-define '(define x 2) '(x 1))
+; (#<unspecified> (x 2))
+; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
+
+
+; user=> (evaluar-define '(define) '(x 1))
+; ((;ERROR: define: missing or extra expression (define)) (x 1))
+; user=> (evaluar-define '(define x) '(x 1))
+; ((;ERROR: define: missing or extra expression (define x)) (x 1))
+; user=> (evaluar-define '(define x 2 3) '(x 1))
+; ((;ERROR: define: missing or extra expression (define x 2 3)) (x 1))
+; user=> (evaluar-define '(define ()) '(x 1))
+; ((;ERROR: define: missing or extra expression (define ())) (x 1))
+; user=> (evaluar-define '(define () 2) '(x 1))
+; ((;ERROR: define: bad variable (define () 2)) (x 1))
+; user=> (evaluar-define '(define 2 x) '(x 1))
+; ((;ERROR: define: bad variable (define 2 x)) (x 1))
+
+
+; Otro test que se comento en las consultas:
+; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
+;"Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
+(deftest evaluar-define-test
+  (testing "Prueba de la forma especial evaluar define")
+
+
+  (is (= (list (symbol "#<unspecified>") (list 'x '2))
+  (evaluar-define '(define x 2) '(x 1))))
+
+  ;(is (= (list (symbol "#<unspecified>") (list 'x '1 'f (list 'lambda '(x) '(+ x 1))))
+  ;(evaluar-define '(define (f x) (+ x 1)) '(x 1))))
+
+
+  ;(is (= (list (symbol "#<unspecified>") 
+  ;(list 'x '1 'f (list 'lambda '(x) '(display x) '(newline) '(+ x 1))))
+  ;(evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))))
+
+  (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define)) '(x 1))
+  (evaluar-define '(define) '(x 1))))
+
+  (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define 'x)) '(x 1))
+  (evaluar-define '(define x) '(x 1))))
+
+  (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define 'x '2 '3)) '(x 1))
+  (evaluar-define '(define x 2 3) '(x 1))))
+
+  (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define '() )) '(x 1))
+  (evaluar-define '(define ()) '(x 1))))
+
+    (is (= (list (generar-mensaje-error :bad-variable 'define 2) '(x 1))
+  (evaluar-define '(define 2 x) '(x 1))))
+
+  (is (= (list (generar-mensaje-error :bad-variable 'define '()) '(x 1))
+  (evaluar-define '(define () x) '(x 1))))
+)
+
+
+
+
+; user=> (evaluar-set! '(set! x 1) '(x 0))
+; (#<unspecified> (x 1))
+; user=> (evaluar-set! '(set! x 1) '())
+; ((;ERROR: unbound variable: x) ())
+; user=> (evaluar-set! '(set! x) '(x 0))
+; ((;ERROR: set!: missing or extra expression (set! x)) (x 0))
+; user=> (evaluar-set! '(set! x 1 2) '(x 0))
+; ((;ERROR: set!: missing or extra expression (set! x 1 2)) (x 0))
+; user=> (evaluar-set! '(set! 1 2) '(x 0))
+; ((;ERROR: set!: bad variable 1) (x 0))
+;"Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
+(deftest evaluar-set!-test
+(testing "Prueba de la forma especial evaluar set!")
+
+  (is (= (list (symbol "#<unspecified>") (list 'x '1))
+  (evaluar-set! '(set! x 1) '(x 0))))
+
+; user=> (evaluar-set! '(set! x 1) '())
+; ((;ERROR: unbound variable: x) ())
+  ;(is )
+
+
+; user=> (evaluar-set! '(set! x) '(x 0))
+; ((;ERROR: set!: missing or extra expression (set! x)) (x 0))
+
+  (imprimir (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x)) '(x 0)))
+
+  ;(is (= (list (generar-mensaje-error :missing-or-extra 'set! (list 'set! 'x)) '(x 0))
+  ;(evaluar-set! '(set! x) '(x 0))))
+
+
+
+
+)
+
+
+

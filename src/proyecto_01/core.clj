@@ -667,7 +667,7 @@
   [coll elm]  
   (some #(= elm %) coll))
 
-
+;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
 (defn buscarUtil [clave, ambiente]
 (cond
   (nil? (in? (take-nth 2 ambiente) clave)) -1
@@ -947,14 +947,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; (#<unspecified> (x 2))
 ; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
 ; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
-; user=> (evaluar-define '(define) '(x 1))
-; ((;ERROR: define: missing or extra expression (define)) (x 1))
-; user=> (evaluar-define '(define x) '(x 1))
-; ((;ERROR: define: missing or extra expression (define x)) (x 1))
-; user=> (evaluar-define '(define x 2 3) '(x 1))
-; ((;ERROR: define: missing or extra expression (define x 2 3)) (x 1))
-; user=> (evaluar-define '(define ()) '(x 1))
-; ((;ERROR: define: missing or extra expression (define ())) (x 1))
+
 ; user=> (evaluar-define '(define () 2) '(x 1))
 ; ((;ERROR: define: bad variable (define () 2)) (x 1))
 ; user=> (evaluar-define '(define 2 x) '(x 1))
@@ -962,8 +955,37 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; Otro test que se comento en las consultas:
 ; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
 ; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
-(defn evaluar-define [entrada]
-  "Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
+;"Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
+
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
+; (a 1 b 2 c 3 d 4)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
+; (a 1 b 4 c 3)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
+; (a 1 b 2 c 3)
+; user=> (actualizar-amb () 'b 7)
+; (b 7)
+; (defn actualizar-amb [ambiente, clave, valor]
+(defn evaluar-define [expresion, ambiente]
+  (cond
+
+    (or (< (count expresion) 3) (> (count expresion) 3)) 
+    (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
+
+; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
+; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
+    (= (nth expresion 1) (list 'f 'x)) 
+    (list (symbol "#<unspecified>") 
+    ;(concat (for [i (range (count ambiente))] (nth ambiente i)) '(f) (list 'lambda '(x) (nth expresion 2))))
+
+    (list (nth ambiente 0) (nth ambiente 1) 'f (list 'lambda '(x) (nth expresion 2)))  )
+
+    (= false (symbol? (nth expresion 1))) 
+    (list (generar-mensaje-error :bad-variable 'define (nth expresion 1)) ambiente)
+
+    :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
+  )
+  
 )
 
 ; user=> (evaluar-if '(if 1 2) '(n 7))
@@ -1057,8 +1079,32 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; ((;ERROR: set!: missing or extra expression (set! x 1 2)) (x 0))
 ; user=> (evaluar-set! '(set! 1 2) '(x 0))
 ; ((;ERROR: set!: bad variable 1) (x 0))
-(defn evaluar-set! [entrada]
-  "Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
+;"Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
+
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
+; (a 1 b 2 c 3 d 4)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
+; (a 1 b 4 c 3)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
+; (a 1 b 2 c 3)
+; user=> (actualizar-amb () 'b 7)
+; (b 7)
+
+;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
+;(defn buscarUtil [clave, ambiente]
+
+; user=> (evaluar-set! '(set! x 1) '(x 0))
+; (#<unspecified> (x 1))
+(defn evaluar-set! [expresion, ambiente]
+(cond
+
+(= -1(buscarUtil (nth expresion 1) ambiente )) "No encontrada"
+:else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
+;(list (symbol "#<unspecified>") (list 'x '1))
+
+)
+
+  
 )
 
 
