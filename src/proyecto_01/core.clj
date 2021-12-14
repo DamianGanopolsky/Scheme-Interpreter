@@ -742,6 +742,9 @@
 
 
 (defn buscarInsensitive [clave, ambiente, i, n]
+;(spy "b insensitive con clave" clave)
+;(spy "i es " i)
+;(spy "n es" n)
 (cond
   (= n i) -1
 
@@ -836,7 +839,8 @@
 
 
 (defn igual? [atomo1, atomo2]
-;(spy "ENTRO A IGUAL:")
+;(spy "VERIFICO SI SON IGUALES:" atomo1)
+;(spy "VERIFICO SI SON IGUALES:" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -847,8 +851,21 @@
   (and (string? atomo1) (string? atomo2)) (= atomo1 atomo2)
   (and (number? atomo1) (string? atomo2)) false
   (and (string? atomo1) (number? atomo2)) false
-  :else (= (re-seq #"\w+" (clojure.string/upper-case atomo1) ) 
-  (re-seq #"\w+" (clojure.string/upper-case atomo2)))
+  (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true
+  ;(and (symbol? atomo1) (symbol? atomo2) (= false (= atomo1 atomo2))) false
+  (and (number? atomo1) (number? atomo2) (= atomo1 atomo2)) true
+  (and (number? atomo1) (number? atomo2) (= false (= atomo1 atomo2))) false
+  :else (let [converted  (re-seq #"\w+" (clojure.string/upper-case atomo1) )
+  converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))] 
+  (cond
+    (and (= converted converted2)
+    (= false (nil? converted)) (= false (nil? converted2))) true
+    :else false
+  
+  )
+         
+  
+  )
 )
 
 )
@@ -924,7 +941,6 @@
 
 
 (defn fnc-sumar [entrada]
-;(spy "ENTRO A SUMAR")
 (cond
   (empty? entrada) 0
   (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '+ (nth entrada 0))
@@ -1056,7 +1072,7 @@
 ; FUNCION AUXILIAR DE EVALUAR-DEFINE
 (defn parseo-lambda [expresion, ambiente]
 
-  (spy "Expresion es" expresion)
+  ;(spy "Expresion es" expresion)
 
   (concatenar ambiente (nth (nth expresion 1) 0) 
   (concat(list 'lambda  (for [j (range 1 (count (nth expresion 1)))] (nth (nth expresion 1) j))) 
@@ -1076,7 +1092,7 @@
 ; user=> (actualizar-amb () 'b 7)
 
 (defn evaluar-define [expresion, ambiente]
-(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
+;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
