@@ -739,11 +739,18 @@
 )
 )
 
-(defn buscarInsensitive [clave, ambiente, i, n]
-(cond
-  (= n i) -1
 
-  (= (lower-case clave) (lower-case(nth ambiente i))) i
+
+(defn buscarInsensitive [clave, ambiente, i, n]
+(spy "BUSCO " clave)
+(spy "EN" ambiente)
+(spy "i" i)
+(spy "n" n)
+(spy "clave" clave)
+(cond
+  (= n i) (spy "Devuelvo"-1)
+
+  (igual? (nth ambiente i) clave) i
 
   :else (buscarInsensitive clave ambiente (+ i 1) n)
 )
@@ -751,11 +758,15 @@
 )
 
 
+
+
 (defn actualizar-amb [ambiente, clave, valor]
+(spy "ENTRO A ACTUALZIAR-AMB ")
+(spy "buscar insensitive es" (buscarInsensitive clave ambiente 0 (count ambiente)))
 (cond
   (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
-  (= -1(buscarUtil clave ambiente)) (concat ambiente (list clave valor))
-  (< -1 (buscarUtil clave ambiente)) (apply list(assoc (into [] ambiente) (+ 1 (.indexOf ambiente clave)) valor))
+  (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
+  (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
 )
 )
@@ -768,10 +779,16 @@
 
 (defn buscar [clave, ambiente]
 (cond
-  (nil? (in? (take-nth 2 ambiente) clave)) (generar-mensaje-error :unbound-variable clave)
-  :else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
+  ;(nil? (in? (take-nth 2 ambiente) clave)) (generar-mensaje-error :unbound-variable clave)
+  ;:else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
+
+  (= -1(buscarInsensitive clave (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente)))) 
+  (generar-mensaje-error :unbound-variable clave)
+
+  :else (nth (take-nth 2 (rest ambiente))
+  (buscarInsensitive clave (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente)))
 )
-)
+))
 
 
 
@@ -826,19 +843,21 @@
 
 
 (defn igual? [atomo1, atomo2]
-;(spy "ENTRO A IGUAL:")
-( let [converted (re-seq #"\w+" (clojure.string/upper-case atomo1) )
-converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
+(spy "ENTRO A IGUAL:")
 (cond
 
+  (and (nil? atomo1) (nil? atomo2)) true
+  (nil? atomo1) false
+  (nil? atomo2) false
   (and (string? atomo1) (symbol? atomo2)) false
   (and (symbol? atomo1) (string? atomo2)) false
   (and (string? atomo1) (string? atomo2)) (= atomo1 atomo2)
   (and (number? atomo1) (string? atomo2)) false
   (and (string? atomo1) (number? atomo2)) false
-  :else (= converted converted2)
+  :else (= (re-seq #"\w+" (clojure.string/upper-case atomo1) ) 
+  (re-seq #"\w+" (clojure.string/upper-case atomo2)))
 )
-)
+
 )
 
 ;(defn igual-recursivo? [elemento1, elemento2, n, i]
@@ -999,8 +1018,8 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ;(spy "ENTRO A EVALUAR ESCALAR con el simbolo:" escalar)
 ;(spy "AMBIENTE E")
 (cond
-
-(and (symbol? escalar) (nil? (in? (take-nth 2 ambiente) escalar))) 
+;(= -1 (buscarInsensitive escalar (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente))))
+(and (symbol? escalar) (= -1 (buscarInsensitive escalar (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente))))) 
 (list (generar-mensaje-error :unbound-variable escalar) ambiente)
 (symbol? escalar) (list (buscar escalar ambiente) ambiente)
 
@@ -1184,7 +1203,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 (= false (symbol? (nth expresion 1))) 
 (list (generar-mensaje-error :bad-variable 'set! (nth expresion 1)) ambiente)
 
-(= -1(buscarUtil (nth expresion 1) ambiente )) 
+(= -1(buscarInsensitive (nth expresion 1) ambiente 0 (count ambiente))) 
 (list (generar-mensaje-error :unbound-variable (nth expresion 1)) ambiente)
 
 
