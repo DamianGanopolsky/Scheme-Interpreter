@@ -129,8 +129,8 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
-  (spy "AMBIENTE ACA ES" amb)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "AMBIENTE ACA ES" amb)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -188,7 +188,7 @@
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
   ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
-  (spy "ENTRO A APLICAR CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
   ;(spy "ENTRO A APLICAR CON argumentos" lae)
    (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
@@ -239,7 +239,7 @@
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
-  (spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
   
   (cond
 
@@ -587,10 +587,10 @@
 (defn evaluar-quote
   "Evalua una expresion `quote`."
   [expre amb]
-  (spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
+  ;(spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
   (if (not= (count expre) 2) ; si no son el operador y exactamente 1 argumento
       (list (generar-mensaje-error :missing-or-extra 'quote expre) amb)
-      (spy "Devuelvo:" (list (second expre) amb))))
+       (list (second expre) amb)))
 
 
 (defn generar-mensaje-error
@@ -737,6 +737,17 @@
   (nil? (in? (take-nth 2 ambiente) clave)) -1
   :else   (.indexOf (take-nth 2 ambiente) clave)
 )
+)
+
+(defn buscarInsensitive [clave, ambiente, i, n]
+(cond
+  (= n i) -1
+
+  (= (lower-case clave) (lower-case(nth ambiente i))) i
+
+  :else (buscarInsensitive clave ambiente (+ i 1) n)
+)
+
 )
 
 
@@ -985,11 +996,11 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
   ;"Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
 (defn evaluar-escalar [escalar, ambiente]
-(spy "ENTRO A EVALUAR ESCALAR con el simbolo:" escalar)
-(spy "AMBIENTE E")
+;(spy "ENTRO A EVALUAR ESCALAR con el simbolo:" escalar)
+;(spy "AMBIENTE E")
 (cond
 
-(and (symbol? escalar) (nil? (in? (spy "simbolos ambiente:"(take-nth 2 ambiente)) escalar))) 
+(and (symbol? escalar) (nil? (in? (take-nth 2 ambiente) escalar))) 
 (list (generar-mensaje-error :unbound-variable escalar) ambiente)
 (symbol? escalar) (list (buscar escalar ambiente) ambiente)
 
@@ -1052,7 +1063,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; user=> (actualizar-amb () 'b 7)
 
 (defn evaluar-define [expresion, ambiente]
-(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
+;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
