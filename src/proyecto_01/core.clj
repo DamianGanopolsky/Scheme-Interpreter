@@ -1,26 +1,12 @@
-;;(ns proyecto-01.core
-;;(:gen-class))
-
-;;Cuando tenga el jar -> Se va a llamar al main y este main al repl
-;;(defn -main
-  ;;  "Funcion ppal del Interprete de Scheme -> Va a"
-    ;;[& args]
-    ;;(repl)
-;;)
-
-
-;;Aca abajo tiene que estar todo el proyecto
-
-
 (ns proyecto-01.core
 (:gen-class))
-(declare ejemplo)
+(declare repl)
 (declare es-el-doble?)
 (declare spy)
 (defn -main
 "Ejemplo de Proyecto en Clojure"
 [& args]
-(ejemplo))
+(repl))
 
 (require '[clojure.string :as st :refer [blank? starts-with? ends-with? lower-case]]
          '[clojure.java.io :refer [delete-file reader]]
@@ -143,10 +129,15 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
+  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  (spy "AMBIENTE ACA ES" amb)
+
+  ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
       (list expre amb)                                      ; de lo contrario, evaluarla
-      ;SI NO SE CUMPLE LO DEL IF, ENTRA AL COND
+      ;Si no se cumple lo del if, entra al cond
       (cond
+        ; e.g: (+ 5 3) -> No entra a evaluar escalar ni es define
         (not (seq? expre))             (evaluar-escalar expre amb)
 
         (igual? (first expre) 'cond) (evaluar-cond expre amb)
@@ -167,7 +158,6 @@
 
         (igual? (first expre) 'set!) (evaluar-set! expre amb)
 
-        ;(igual? (first expre) 'eval) (evaluar-eval expre amb)
 
          ;
          ;
@@ -179,19 +169,37 @@
          ;
          ;Clase: Aca van a estar los que vamos a hacer nosotros: evaluar-or, evaluar-define, etc
 
-	    	  :else (let [res-eval-1 (evaluar (first expre) amb),
+        ; En el ambiente -> '+ me da +. Pero despues si modifico una variable por ej, 'x me va a dar 9 o
+        ; un lambda
+
+         ; e.g: (+ 5 3) -> Se llama a aplicar con las 2 partes evaluadas. La cabeza es solo el +,
+         ;la evaluacion del +,vuelve a ser el +. Evaluo el cuerpo -> 5 me da 5 y 3 me da 3.
+         ; Llamo a aplicar con + 
+
+         ;res-eval-2 -> Los argumentos evaluados usando reduce (de izq a derecha). Un argumento puede
+         ;tener un set y eso afecta a los que quedan de la derecha.
+
+	    	:else (let [res-eval-1 (evaluar (first expre) amb),
              						 res-eval-2 (reduce (fn [x y] (let [res-eval-3 (evaluar y (first x))] (cons (second res-eval-3) (concat (next x) (list (first res-eval-3)))))) (cons (list (second res-eval-1)) (next expre)))]
 					              	(aplicar (first res-eval-1) (next res-eval-2) (first res-eval-2))))))
 
 
 (defn aplicar
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
+  ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
+  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR CON argumentos" lae)
    (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
    (cond
      (error? resu1) (list resu1 amb)
      (error? resu2) (list resu2 amb)
+     ;Si hay un error aca -> Devuelvo el error
+     ;Sino -> Me fijo si es una funcion primitiva o un lambda
+     
+     ;Una funcion no primitiva tiene fnc algo que no es una secuencia
+     ;El resultado va a devolver el 15 y el ambiente
      (not (seq? fnc)) (list (aplicar-funcion-primitiva fnc lae amb) amb)
      :else (aplicar-lambda fnc lae amb))))
 
@@ -228,13 +236,13 @@
            (second (aplicar-lambda-simple fnc lae amb))))
 
 
-;;ESTO HAY QUE COMPLETAR
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
+  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  
   (cond
 
-  ;;Las que tienen simbolos se ponen aca
     (= fnc '<) (fnc-menor lae)
 
     (= fnc '>) (fnc-mayor lae)
@@ -250,8 +258,7 @@
     ; Si la funcion primitiva esta identificada por un simbolo, puede determinarse mas rapido que hacer con ella
     ;
     ;
-
-;;Aca se ponen las que hacemos nosotros
+    (igual? fnc 'sumar) (fnc-sumar lae)
 
     (igual? fnc 'append)  (fnc-append lae)
 
@@ -294,8 +301,6 @@
 
     :else (generar-mensaje-error :wrong-type-apply fnc)))
 
-
-;;ACA HAY UNAS QUE YA ESTAN HECHAS
 (defn fnc-car
   "Devuelve el primer elemento de una lista."
   [lae]
@@ -443,12 +448,14 @@
 
 (defn revisar-fnc
   "Si la `lis` representa un error lo devuelve; si no, devuelve nil."
-  [lis] (if (error? lis) lis nil))
+  [lis] (if (error?  lis) lis nil))
 
 
 (defn revisar-lae
+  
   "Si la `lis` contiene alguna sublista que representa un error lo devuelve; si no, devuelve nil."
-  [lis] (first (remove nil? (map revisar-fnc (filter seq? lis)))))
+  [lis]
+   (first (remove nil? (map revisar-fnc (filter seq? lis)))))
 
 
 (defn evaluar-cond
@@ -622,26 +629,9 @@
 
 ; FUNCIONES QUE DEBEN SER IMPLEMENTADAS PARA COMPLETAR EL INTERPRETE DE SCHEME (ADEMAS DE COMPLETAR `EVALUAR` Y `APLICAR-FUNCION-PRIMITIVA`):
 
-; LEER-ENTRADA:
-; user=> (leer-entrada)
-; (hola
-; mundo)
-; "(hola mundo)"
-; user=> (leer-entrada)
-; 123
-; "123"
-;;HAY QUE CONSTRUIR LOS TESTS EN BASE A ESTO, PONER ESTOS TESTS
 
 
 
-;  "Lee una cadena desde la terminal/consola. Si los parentesis no estan correctamente balanceados 
-  ;al presionar Enter/Intro,
-  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
-   ;se la devuelve completa."
-
-  ; "Lee una cadena desde la terminal/consola. Si contiene parentesis de menos al presionar Enter/Intro, 
-  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
-   ;se la devuelve completa (si corresponde, advirtiendo previamente que hay parentesis de mas)."
 
 
 ;FUNCION AUXILIAR DE leer-entrada
@@ -658,6 +648,15 @@
 )
 )
 
+
+;  "Lee una cadena desde la terminal/consola. Si los parentesis no estan correctamente balanceados 
+  ;al presionar Enter/Intro,
+  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
+   ;se la devuelve completa."
+
+  ; "Lee una cadena desde la terminal/consola. Si contiene parentesis de menos al presionar Enter/Intro, 
+  ; se considera que la cadena ingresada es una subcadena y el ingreso continua. De lo contrario, 
+   ;se la devuelve completa (si corresponde, advirtiendo previamente que hay parentesis de mas)."
 (defn leer-entrada []
 
 (leer-entrada-recursivo "" 0)
@@ -688,10 +687,6 @@
 
 ; FUNCION AUXILIAR DE verificar-parentesis
 (defn balanceado? [lista, contador,i, n]
-;(spy "i aca es" i)
-;(spy "contador es" contador)
-;(spy "lista" lista)
-;(spy "total es" n)
   (cond
   (= contador -1) (- 0 1)
 
@@ -705,7 +700,6 @@
   :else (balanceado? lista contador (+ i 1) n))
   )
 
-;                       Fin funciones auxiliares
 
 ;; ()()(), devuelve 0, esta bien
 ;;Devuelve 0 si estan bien balanceados, 1 si faltan parentesis, negativo si estan desbalanceados
@@ -726,11 +720,13 @@
 ;;FAUX
 ; Clase: "Los errores son listas que tienen en la primera posicion el simbolo de error"
 
-; FUNCION AUXILIAR DE in?
+; FUNCION AUXILIAR 
 (defn in? 
   "true si la lista contiene el elemento"
   [coll elm]  
   (some #(= elm %) coll))
+
+
 
 ;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
 
@@ -770,6 +766,7 @@
 ;"Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
 (defn error?  [entrada]
   (cond
+  (= false (list? entrada)) false
   (= (nth entrada 0) (symbol ";WARNING:")) true
   (= (nth entrada 0) (symbol ";ERROR:")) true
   :else false
@@ -792,8 +789,6 @@
 ; user=> (restaurar-bool (read-string "(and (or %F %f %t %T) %T)") )
 ; (and (or #F #f #t #T) #T)
 ;"Cambia, en un codigo leido con read-string, %t por #t y %f por #f (y sus respectivas versiones en mayusculas)."
-
-
 
 ;Le paso la cadena protegida, leida como read string. Lo primero que hago es convertir esa entrada a string,
 ;reemplazando todos los %F,%T,... por :%F,:%T, despues hago el read string. Teniendo los :%F,:%T,...
@@ -819,7 +814,7 @@
 
 
 (defn igual? [atomo1, atomo2]
-
+;(spy "ENTRO A IGUAL:")
 ( let [converted (re-seq #"\w+" (clojure.string/upper-case atomo1) )
 converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 (cond
@@ -905,6 +900,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
 
 (defn fnc-sumar [entrada]
+;(spy "ENTRO A SUMAR")
 (cond
   (empty? entrada) 0
   (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '+ (nth entrada 0))
@@ -988,6 +984,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
   ;"Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
 (defn evaluar-escalar [escalar, ambiente]
+(spy "ENTRO A EVALUAR ESCALAR:")
 (cond
 
 (and (symbol? escalar) (nil? (in? (take-nth 2 ambiente) escalar))) 

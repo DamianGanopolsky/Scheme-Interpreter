@@ -2,16 +2,6 @@
 (:require [clojure.test :refer :all]             
 [proyecto-01.core :refer :all]))  
 
-
-
-
-(deftest es-el-doble?-test   
-(testing "Prueba de la funcion: es-el-doble?"     
-(is (= true (es-el-doble? 4 8)))     
-(is (= false (es-el-doble? 4 7)))   ) ) 
-
-
-
 ; user=> (fnc-sumar ())
 ; 0
 ; user=> (fnc-sumar '(3))
@@ -247,6 +237,8 @@
 
 (deftest error?-test 
   (testing "Prueba de la funcion: fnc-error"
+
+(is (= false (error? '+)))
 (is (= true (error? (list (symbol ";ERROR:") 'mal 'hecho))))
 (is (= false (error? (list 'mal 'hecho))))
 (is (= true (error? (list (symbol ";WARNING:") 'mal 'hecho))))
@@ -441,7 +433,7 @@
 
 (deftest evaluar-escalar-test
 (testing "Prueba de la forma especial evaluar escalar")
-(is (= (list '32 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar '32 '(x 6 y 11 z "hola"))))
+(is (= (list '32 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 32 '(x 6 y 11 z "hola"))))
 (is (= (list "chau" (list 'x '6 'y '11 'z "hola")) (evaluar-escalar "chau" '(x 6 y 11 z "hola"))))
 (is (= (list '11 (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 'y '(x 6 y 11 z "hola"))))
 (is (= (list "hola" (list 'x '6 'y '11 'z "hola")) (evaluar-escalar 'z '(x 6 y 11 z "hola"))))
