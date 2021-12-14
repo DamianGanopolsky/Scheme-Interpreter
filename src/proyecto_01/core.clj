@@ -106,7 +106,7 @@
                'if 'if 'lambda 'lambda 'length 'length 'list 'list 'list? 'list? 'load 'load
                'newline 'newline 'nil (symbol "#f") 'not 'not 'null? 'null? 'or 'or 'quote 'quote
                'read 'read 'reverse 'reverse 'set! 'set! (symbol "#f") (symbol "#f")
-               (symbol "#t") (symbol "#t") '+ '+ '- '- '* '< '< '> '> '>= '>=)))
+               (symbol "#t") (symbol "#t") '+ '+ '- '- '< '< '> '> '>= '>=)))
   ([amb]
    (print "> ") (flush)
    (try
@@ -984,10 +984,11 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 
   ;"Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
 (defn evaluar-escalar [escalar, ambiente]
-(spy "ENTRO A EVALUAR ESCALAR:")
+(spy "ENTRO A EVALUAR ESCALAR con el simbolo:" escalar)
+(spy "AMBIENTE E")
 (cond
 
-(and (symbol? escalar) (nil? (in? (take-nth 2 ambiente) escalar))) 
+(and (symbol? escalar) (nil? (in? (spy "simbolos ambiente:"(take-nth 2 ambiente)) escalar))) 
 (list (generar-mensaje-error :unbound-variable escalar) ambiente)
 (symbol? escalar) (list (buscar escalar ambiente) ambiente)
 
