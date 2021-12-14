@@ -188,7 +188,7 @@
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
   ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
-  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
+  (spy "ENTRO A APLICAR CON FUNCION" fnc)
   ;(spy "ENTRO A APLICAR CON argumentos" lae)
    (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
@@ -239,7 +239,7 @@
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
-  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  (spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
   
   (cond
 
@@ -587,9 +587,10 @@
 (defn evaluar-quote
   "Evalua una expresion `quote`."
   [expre amb]
+  (spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
   (if (not= (count expre) 2) ; si no son el operador y exactamente 1 argumento
       (list (generar-mensaje-error :missing-or-extra 'quote expre) amb)
-      (list (second expre) amb)))
+      (spy "Devuelvo:" (list (second expre) amb))))
 
 
 (defn generar-mensaje-error
@@ -1042,7 +1043,16 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
 ; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
 ; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
 
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
+; (a 1 b 2 c 3 d 4)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
+; (a 1 b 4 c 3)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
+; (a 1 b 2 c 3)
+; user=> (actualizar-amb () 'b 7)
+
 (defn evaluar-define [expresion, ambiente]
+(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
@@ -1057,7 +1067,7 @@ converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))]
     (= false (symbol? (nth expresion 1))) 
     (list (generar-mensaje-error :bad-variable 'define (nth expresion 1)) ambiente)
 
-    :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
+    :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth (evaluar (nth expresion 2) ambiente) 0)))
   )
   
 )
