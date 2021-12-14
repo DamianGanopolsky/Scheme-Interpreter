@@ -742,13 +742,8 @@
 
 
 (defn buscarInsensitive [clave, ambiente, i, n]
-(spy "BUSCO " clave)
-(spy "EN" ambiente)
-(spy "i" i)
-(spy "n" n)
-(spy "clave" clave)
 (cond
-  (= n i) (spy "Devuelvo"-1)
+  (= n i) -1
 
   (igual? (nth ambiente i) clave) i
 
@@ -761,8 +756,6 @@
 
 
 (defn actualizar-amb [ambiente, clave, valor]
-(spy "ENTRO A ACTUALZIAR-AMB ")
-(spy "buscar insensitive es" (buscarInsensitive clave ambiente 0 (count ambiente)))
 (cond
   (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
   (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
@@ -843,7 +836,7 @@
 
 
 (defn igual? [atomo1, atomo2]
-(spy "ENTRO A IGUAL:")
+;(spy "ENTRO A IGUAL:")
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -1082,7 +1075,7 @@
 ; user=> (actualizar-amb () 'b 7)
 
 (defn evaluar-define [expresion, ambiente]
-;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
+(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
@@ -1091,7 +1084,8 @@
     (and (> (count expresion) 3) (= false (list? (nth expresion 1)))) 
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
-    (= (nth expresion 1) (list 'f 'x)) 
+    ;(= (nth expresion 1) (list 'f 'x)) 
+    (list? (nth expresion 1))
     (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 
     (= false (symbol? (nth expresion 1))) 

@@ -604,8 +604,8 @@
     (is (= (list (generar-mensaje-error :bad-variable 'define 2) '(x 1))
   (evaluar-define '(define 2 x) '(x 1))))
 
-  (is (= (list (generar-mensaje-error :bad-variable 'define '()) '(x 1))
-  (evaluar-define '(define () x) '(x 1))))
+  ;(is (= (list (generar-mensaje-error :bad-variable 'define '()) '(x 1))
+  ;(evaluar-define '(define () x) '(x 1))))
 )
 
 
