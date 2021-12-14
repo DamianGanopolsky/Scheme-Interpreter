@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
+  (spy "ENTRO A EVALUAR CON EXPRE" expre)
   ;(spy "AMBIENTE ACA ES" amb)
 
   ; e.g: (+ 5 3) -> Entra a Cond
@@ -138,7 +138,7 @@
       ;Si no se cumple lo del if, entra al cond
       (cond
         ; e.g: (+ 5 3) -> No entra a evaluar escalar ni es define
-        (not (seq? expre))             (evaluar-escalar expre amb)
+        (not (seq? expre))             (spy "Evaluar escalar devuelve"(evaluar-escalar expre amb))
 
         (igual? (first expre) 'cond) (evaluar-cond expre amb)
 
@@ -839,27 +839,41 @@
 
 
 (defn igual? [atomo1, atomo2]
-;(spy "VERIFICO SI SON IGUALES:" atomo1)
-;(spy "VERIFICO SI SON IGUALES:" atomo2)
+(spy "VERIFICO SI SON IGUALES:" atomo1)
+(spy "VERIFICO SI SON IGUALES:" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
   (nil? atomo1) false
   (nil? atomo2) false
+
+  (and (= (symbol "#f") atomo1) (= (symbol "#F") atomo2)) true
+
+  (and (= (symbol "#F") atomo1) (= (symbol "#f") atomo2)) true
+
+  (and (= (symbol "#t") atomo1) (= (symbol "#T") atomo2)) true
+
+  (and (= (symbol "#t") atomo1) (= (symbol "#T") atomo2)) true
+
+  (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) (spy "Los simbolos son igaules"true)
+
+  (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
+
+
   (and (string? atomo1) (symbol? atomo2)) false
   (and (symbol? atomo1) (string? atomo2)) false
   (and (string? atomo1) (string? atomo2)) (= atomo1 atomo2)
   (and (number? atomo1) (string? atomo2)) false
   (and (string? atomo1) (number? atomo2)) false
-  (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true
+  
   ;(and (symbol? atomo1) (symbol? atomo2) (= false (= atomo1 atomo2))) false
   (and (number? atomo1) (number? atomo2) (= atomo1 atomo2)) true
   (and (number? atomo1) (number? atomo2) (= false (= atomo1 atomo2))) false
   :else (let [converted  (re-seq #"\w+" (clojure.string/upper-case atomo1) )
   converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))] 
   (cond
-    (and (= converted converted2)
-    (= false (nil? converted)) (= false (nil? converted2))) true
+    (and (= (spy "Convertido es"converted) (spy "convertido 2 es"converted2))
+    (spy "Convertido es"(= false (nil? converted))) (spy "Convertido 2 es"(= false (nil? converted2)))) true
     :else false
   
   )
