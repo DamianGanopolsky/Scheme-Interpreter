@@ -1056,9 +1056,10 @@
 ; FUNCION AUXILIAR DE EVALUAR-DEFINE
 (defn parseo-lambda [expresion, ambiente]
 
-  ;(concatenar ambiente 'f '(lambda (x)))
+  (spy "Expresion es" expresion)
+
   (concatenar ambiente (nth (nth expresion 1) 0) 
-  (concat(list 'lambda  (list(nth (nth expresion 1) 1))) 
+  (concat(list 'lambda  (for [j (range 1 (count (nth expresion 1)))] (nth (nth expresion 1) j))) 
   (for [i (range 2 (count expresion))] (nth expresion i))))
 )
 
