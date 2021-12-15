@@ -766,7 +766,7 @@
 ;(spy "Entro a actualziar amb con clave" clave)
 ;(spy "Entro a actualziar amb con valor" valor)
 (cond
-  (and (list? valor) (= false (empty? valor)) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
+  (and (seq? valor) (= false (empty? valor)) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
   (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
   (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
@@ -798,7 +798,7 @@
 (defn error?  [entrada]
   ;(spy "ES UN ERROR ESTA ENTRADA?" entrada)
   (cond
-  (= false (list? entrada)) false
+  (= false (seq? entrada)) false
   ;(= false (coll? entrada)) false
   (= '() entrada) false
   (empty? entrada) false
@@ -889,7 +889,7 @@
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
   ;Si son listas, uso la funcion que me arme para compararlas
-  (and (list? atomo1) (list? atomo2)) 
+  (and (seq? atomo1) (seq? atomo2)) 
   (= (symbol "#t")(compare-2-lists atomo1 atomo2 0 (count atomo1)))
 
   (and (string? atomo1) (symbol? atomo2)) false
@@ -945,7 +945,7 @@
 ;"Devuelve el resultado de fusionar listas."
 (defn fnc-append [entrada]
 ( cond
-   (some false? (map list? entrada)) (generar-mensaje-error :wrong-type-arg 'append (nth entrada (.indexOf (map list? entrada) false)))
+   (some false? (map seq? entrada)) (generar-mensaje-error :wrong-type-arg 'append (nth entrada (.indexOf (map seq? entrada) false)))
   :else (apply concat entrada)
 )
   
@@ -1000,7 +1000,7 @@
 ;(spy "ENTRO A EQUAL CON" entrada)
 (cond
   (empty? entrada) (symbol "#t")
-  (list? (nth entrada 0)) (eq-recursive entrada 0  (count entrada))
+  (seq? (nth entrada 0)) (eq-recursive entrada 0  (count entrada))
   :else   ( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
   ;(spy "Converted es" converted)
   (cond
@@ -1190,11 +1190,11 @@
     (< (count expresion) 3)
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
-    (and (> (count expresion) 3) (= false (list? (nth expresion 1)))) 
+    (and (> (count expresion) 3) (= false (seq? (nth expresion 1)))) 
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
     ;(= (nth expresion 1) (list 'f 'x)) 
-    (list? (nth expresion 1))
+    (seq? (nth expresion 1))
     (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 
     (= false (symbol? (nth expresion 1))) 
