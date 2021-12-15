@@ -239,6 +239,7 @@
   (testing "Prueba de la funcion: fnc-error"
 
 (is (= false (error? '+)))
+(is (= false (error? '())))
 (is (= true (error? (list (symbol ";ERROR:") 'mal 'hecho))))
 (is (= false (error? (list 'mal 'hecho))))
 (is (= true (error? (list (symbol ";WARNING:") 'mal 'hecho))))
