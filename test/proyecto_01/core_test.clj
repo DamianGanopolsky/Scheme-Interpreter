@@ -211,6 +211,10 @@
 ; #t
 ; user=> (fnc-equal? '(1 1 2 1))
 ; #f
+
+;(fnc-equal? '((5 0) (5 0)))
+;#t
+
 (deftest fnc-equal?-test 
 (testing "Prueba de la funcion: fnc-equal"
 (is (= (symbol "#t") (fnc-equal? ())))
@@ -221,6 +225,11 @@
 (is (= (symbol "#f") (fnc-equal? '(A a A B))))
 (is (= (symbol "#t") (fnc-equal? '(1 1 1 1))))
 (is (= (symbol "#f") (fnc-equal? '(1 1 2 1))))
+(is (= (symbol "#t") (fnc-equal? '((5 0) (5 0)))))
+(is (= (symbol "#f") (fnc-equal? '((5 1) (5 0)))))
+(is (= (symbol "#t") (fnc-equal? '(() ()))))
+(is (= (symbol "#f") (fnc-equal? '(() (2)))))
+(is (= (symbol "#f") (fnc-equal? '((1 3 5) (2)))))
 )
 )
 
@@ -314,6 +323,7 @@
 
 ;> (equal? (list "asd" 5) (list "asd" 5))
 ;#t
+
 
 ;Si es lista con lista, compara miembro a miebro y hace un and.
 ;Si son 2 simbolos (e.g: 'if o 'foo), compara de modo insensitiva

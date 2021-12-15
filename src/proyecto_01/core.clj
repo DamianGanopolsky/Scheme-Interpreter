@@ -793,14 +793,16 @@
 
 ;"Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
 (defn error?  [entrada]
+  ;(spy "ES UN ERROR ESTA ENTRADA?" entrada)
   (cond
   (= false (list? entrada)) false
+  ;(= false (coll? entrada)) false
   (= '() entrada) false
   (empty? entrada) false
   (= (nth entrada 0) (symbol ";WARNING:")) true
   (= (nth entrada 0) (symbol ";ERROR:")) true
   :else false
-  )
+  ) 
 )
 
 ; user=> (proteger-bool-en-str "(or #F #f #t #T)")
@@ -844,9 +846,9 @@
 
 
 (defn igual? [atomo1, atomo2]
-;(spy "VERIFICO SI SON IGUALES:" atomo1)
-;(spy "VERIFICO SI SON IGUALES:" atomo2)
-(cond
+(spy "VERIFICO SI SON IGUALES:" atomo1)
+(spy "VERIFICO SI SON IGUALES:" atomo2)
+(spy "devuelvo"(cond
 
   (and (nil? atomo1) (nil? atomo2)) true
   (nil? atomo1) false
@@ -885,7 +887,7 @@
          
   
   )
-)
+))
 
 )
 
@@ -931,17 +933,64 @@
 
 ;Convierto la lista a string, la paso a mayusculas y la termino convirtiendo en secuencia para poder
 ;applicarle apply
+
+(defn compare-2-lists [list1, list2, i, n]
+(spy "ENTRO A COMPARE-2-LISTS CON " list1)
+(spy "ENTRO A COMPARE-2-LISTS CON " list2)
+(spy "i es " i)
+(spy "n es " n)
+(cond
+
+  (= false(= (spy "cuenta de 1 es"(count list1)) (spy "cuienta de 2 es"(count list2)))) (symbol "#f")
+  (= i n) (symbol "#t")
+
+  :else
+  (cond
+      (igual? (nth list1 i) (nth list2 i)) (compare-2-lists list1 list2 (+ i 1) n)
+      :else (symbol "#f")
+
+  )
+
+
+)
+)
+
+(defn eq-recursive [entrada, i, n]
+  (spy "ENTRO A EQ RECURSIVE CON" entrada)
+  ;(cond
+   ; (= (+ i 1) n) (symbol "#t")
+    ;:else
+    ;(cond
+     ; (compare-2-lists (nth entrada i) (nth entrada (+ i 1)) 0 (count (nth entrada i)))
+      ;(eq-recursive entrada (+ i 1) n)
+
+      ;:else (symbol "#f")
+    
+    ;)
+
+  ;)
+  (compare-2-lists (nth entrada 0) (nth entrada 1) 0 (count (nth entrada 0)))
+
+)
+
 (defn fnc-equal? [entrada]
 (spy "ENTRO A EQUAL CON" entrada)
-( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
 (cond
   (empty? entrada) (symbol "#t")
-  (= 1 (count entrada)) (symbol "#t")
-  (apply = converted) (symbol "#t")
-  :else (symbol "#f")
+  (list? (nth entrada 0)) (eq-recursive entrada 0  (count entrada))
+  :else   ( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
+  ;(spy "Converted es" converted)
+  (cond
+    
+    (= 1 (count entrada)) (symbol "#t")
+    (apply = converted) (symbol "#t")
+    :else (symbol "#f")
+  ))
 )
+
 )
-)
+
+
 
 ; user=> (fnc-read ())
 ; (hola
