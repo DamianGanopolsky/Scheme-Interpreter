@@ -344,7 +344,7 @@
 (is (= false (igual? 6 "6")))
 (is (= true (igual? '(a (b) c) '(A (B) C) )))
 (is (= false (igual? "asd" "ASD")))
-;(is (= false (igual? (list "asd" 5) (list "ASD" 5))))
+(is (= false (igual? (list "asd" 5) (list "ASD" 5))))
 (is (= true (igual? (list "asd" 5) (list "asd" 5) )))
 
 

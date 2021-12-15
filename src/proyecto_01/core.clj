@@ -844,6 +844,27 @@
 ; false
 ; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
 
+(defn compare-2-lists [list1, list2, i, n]
+(spy "ENTRO A COMPARE-2-LISTS CON " list1)
+(spy "ENTRO A COMPARE-2-LISTS CON " list2)
+(spy "i es " i)
+(spy "n es " n)
+(spy "COMPARE-2-LISTS DEVUELVE"(cond
+
+  (= false(= (spy "cuenta de 1 es"(count list1)) (spy "cuienta de 2 es"(count list2)))) (symbol "#f")
+  (= i n) (symbol "#t")
+
+  :else
+  (cond
+      (igual? (nth list1 i) (nth list2 i)) (compare-2-lists list1 list2 (+ i 1) n)
+      :else (symbol "#f")
+
+  )
+
+
+))
+)
+
 
 (defn igual? [atomo1, atomo2]
 (spy "VERIFICO SI SON IGUALES:" atomo1)
@@ -853,6 +874,7 @@
   (and (nil? atomo1) (nil? atomo2)) true
   (nil? atomo1) false
   (nil? atomo2) false
+
 
   (and (= (symbol "#f") atomo1) (= (symbol "#F") atomo2)) true
 
@@ -865,6 +887,10 @@
   (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true ;(spy "Los simbolos son igaules"true)
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
+
+  ;Si son listas, uso la funcion que me arme para compararlas
+  (and (list? atomo1) (list? atomo2)) 
+  (= (symbol "#t")(compare-2-lists atomo1 atomo2 0 (count atomo1)))
 
 
   (and (string? atomo1) (symbol? atomo2)) false
