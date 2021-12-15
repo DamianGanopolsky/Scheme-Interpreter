@@ -450,7 +450,7 @@
   "Si la `lis` representa un error lo devuelve; si no, devuelve nil."
   [lis]
   ;(spy "revisar fnc ocn lis" lis)
-   ;(spy "devuelvo en fnc"(if (error?  lis) lis nil)))
+   (if (error?  lis) lis nil))
 
 
 (defn revisar-lae
