@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -404,13 +404,13 @@
   "Devuelve #t si un elemento es ()."
   
   [lae]
-  (spy "ENTRO A FNC-NULL?")
-  (spy "null? DEVUELVE"(let [ari (controlar-aridad-fnc lae 1 'null?)]
+  ;(spy "ENTRO A FNC-NULL?")
+  (let [ari (controlar-aridad-fnc lae 1 'null?)]
        (if (error? ari)
            ari
            (if (= (first lae) ())
                (symbol "#t")
-               (symbol "#f"))))))
+               (symbol "#f")))))
 
 
 (defn fnc-reverse
@@ -1228,13 +1228,13 @@
 
 ;"Evalua una expresion `if`. Devuelve una lista con el resultado y un ambiente eventualmente modificado."
 (defn evaluar-if [expresion, ambiente]
-(spy "ENTRO A EVALUAR IF CON EXPRESION" expresion)
+;(spy "ENTRO A EVALUAR IF CON EXPRESION" expresion)
   (cond
   (or (< (count expresion) 3) (> (count expresion) 4))
   (list (generar-mensaje-error :missing-or-extra 'if expresion) ambiente)
 
   :else (cond
-    (= (spy "COUNT DE EXPRESION ES"(count expresion)) 3) 
+    (= (count expresion) 3) 
       (cond
         (= (symbol "#f") (nth (evaluar (nth expresion 1) ambiente  ) 0)) (list (symbol "#<unspecified>") ambiente) 
         :else  (evaluar (nth expresion 2) ambiente)
@@ -1242,7 +1242,7 @@
 
     :else 
       (cond
-        (= (symbol "#f") (spy "evaALUAR DIO"(nth (evaluar (nth expresion 1) ambiente) 0))) (evaluar (nth expresion 3) ambiente)
+        (= (symbol "#f") (nth (evaluar (nth expresion 1) ambiente) 0)) (evaluar (nth expresion 3) ambiente)
         :else (evaluar (nth expresion 2) ambiente)
 
       )
