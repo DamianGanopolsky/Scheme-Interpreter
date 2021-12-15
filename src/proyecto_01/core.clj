@@ -939,7 +939,7 @@
 (spy "ENTRO A COMPARE-2-LISTS CON " list2)
 (spy "i es " i)
 (spy "n es " n)
-(cond
+(spy "COMPARE-2-LISTS DEVUELVE"(cond
 
   (= false(= (spy "cuenta de 1 es"(count list1)) (spy "cuienta de 2 es"(count list2)))) (symbol "#f")
   (= i n) (symbol "#t")
@@ -952,24 +952,26 @@
   )
 
 
-)
+))
 )
 
 (defn eq-recursive [entrada, i, n]
   (spy "ENTRO A EQ RECURSIVE CON" entrada)
-  ;(cond
-   ; (= (+ i 1) n) (symbol "#t")
-    ;:else
-    ;(cond
-     ; (compare-2-lists (nth entrada i) (nth entrada (+ i 1)) 0 (count (nth entrada i)))
-      ;(eq-recursive entrada (+ i 1) n)
+  (spy "I" i)
+  (spy "N" n)
+  (cond
+    (= (+ i 1) n) (symbol "#t")
+    :else
+    (cond
+      (= (symbol "#t") (compare-2-lists (nth entrada i) (nth entrada (+ i 1)) 0 (count (nth entrada i))))
+      (eq-recursive entrada (+ i 1) n)
 
-      ;:else (symbol "#f")
+      :else (symbol "#f")
     
-    ;)
+    )
 
-  ;)
-  (compare-2-lists (nth entrada 0) (nth entrada 1) 0 (count (nth entrada 0)))
+  )
+  ;(compare-2-lists (nth entrada 0) (nth entrada 1) 0 (count (nth entrada 0)))
 
 )
 

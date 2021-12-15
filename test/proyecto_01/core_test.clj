@@ -230,6 +230,11 @@
 (is (= (symbol "#t") (fnc-equal? '(() ()))))
 (is (= (symbol "#f") (fnc-equal? '(() (2)))))
 (is (= (symbol "#f") (fnc-equal? '((1 3 5) (2)))))
+(is (= (symbol "#t") (fnc-equal? '((1 3 5) (1 3 5) (1 3 5)))))
+(is (= (symbol "#f") (fnc-equal? '((1 3 5) (1 3 5) (1 3 7)))))
+(is (= (symbol "#t") (fnc-equal? '((1 3 5) (1 3 5) (1 3 5) (1 3 5)))))
+(is (= (symbol "#t") (fnc-equal? '(((1 3 5) (1 3 5)) ((1 3 5) (1 3 5))))))
+(is (= (symbol "#f") (fnc-equal? '(((1 3 5) (1 3 5)) ((1 3 2) (1 3 5))))))
 )
 )
 
