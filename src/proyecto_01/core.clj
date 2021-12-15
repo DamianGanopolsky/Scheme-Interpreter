@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -762,13 +762,13 @@
 
 
 (defn actualizar-amb [ambiente, clave, valor]
-(spy "Entro a actualziar amb con amb" ambiente)
-(spy "Entro a actualziar amb con clave" clave)
-(spy "Entro a actualziar amb con valor" valor)
+;(spy "Entro a actualziar amb con amb" ambiente)
+;(spy "Entro a actualziar amb con clave" clave)
+;(spy "Entro a actualziar amb con valor" valor)
 (cond
-  (and (list? valor) (= false (empty? valor)) (spy "segundo and:"(= (spy " nth valor 0:"(nth valor 0)) (symbol ";ERROR:")))) ambiente
+  (and (list? valor) (= false (empty? valor)) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
   (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
-  (spy "tercera cond"(< -1 (buscarInsensitive clave ambiente 0 (count ambiente)))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
+  (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
 )
 )
@@ -877,8 +877,6 @@
   (and (nil? atomo1) (nil? atomo2)) true
   (nil? atomo1) false
   (nil? atomo2) false
-
-
   (and (= (symbol "#f") atomo1) (= (symbol "#F") atomo2)) true
 
   (and (= (symbol "#F") atomo1) (= (symbol "#f") atomo2)) true
@@ -890,11 +888,9 @@
   (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true ;(spy "Los simbolos son igaules"true)
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
-
   ;Si son listas, uso la funcion que me arme para compararlas
   (and (list? atomo1) (list? atomo2)) 
   (= (symbol "#t")(compare-2-lists atomo1 atomo2 0 (count atomo1)))
-
 
   (and (string? atomo1) (symbol? atomo2)) false
   (and (symbol? atomo1) (string? atomo2)) false
@@ -911,13 +907,9 @@
     (and (= converted converted2)
     (= false (nil? converted)) (= false (nil? converted2))) true
     :else false
-  
   )
-         
-  
   )
 )
-
 )
 
 ;(defn igual-recursivo? [elemento1, elemento2, n, i]
@@ -1192,7 +1184,7 @@
 ; user=> (actualizar-amb () 'b 7)
 
 (defn evaluar-define [expresion, ambiente]
-(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
+;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
@@ -1202,13 +1194,13 @@
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
     ;(= (nth expresion 1) (list 'f 'x)) 
-    (spy "Pregunto si es una lista"(list? (nth expresion 1)))
-    (spy "Devuelvo"(list (symbol "#<unspecified>") (parseo-lambda expresion ambiente)))
+    (list? (nth expresion 1))
+    (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 
     (= false (symbol? (nth expresion 1))) 
     (list (generar-mensaje-error :bad-variable 'define (nth expresion 1)) ambiente)
 
-    :else (list (symbol "#<unspecified>") (spy "Actualizo amb me da"(actualizar-amb ambiente (nth expresion 1) (spy "Evaluar me da"(nth (evaluar (spy "Evaluo esto"(nth expresion 2)) ambiente) 0)))))
+    :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth (evaluar (nth expresion 2) ambiente) 0)))
   )
   
 )

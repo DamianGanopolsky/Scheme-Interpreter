@@ -358,9 +358,19 @@
 (is (= true (igual? (list "asd" 5) (list "asd" 5) )))
 (is (= true (igual? '(5 0) '(5 0))))
 (is (= false (igual? '(5 1) '(5 0))))
+(is (= false (igual? '() '(2))))
+(is (= false (igual? '(4) '(2))))
+(is (= false (igual? '(4 2) '(2))))
+(is (= true (igual? '(() ()) '(() ()))))
+(is (= true (igual? '() '())))
+(is (= false (igual? '((2) ()) '(() ()))))
+(is (= false (igual? '() '4)))
+(is (= true (igual? '(5 0 2 -1 4 6 0 8 ()) '(5 0 2 -1 4 6 0 8 ()))))
+(is (= false (igual? '(5 0 2 -1 4 6 0 8) '(5 0 2 -1 4 6 0 8 ()))))
+(is (= false (igual?  '4 '())))
+(is (= true (igual?  '((()) (())) '((()) (())))))
 (is (= true (igual? '((1 3 5) (1 3 5)) '((1 3 5) (1 3 5)))))
 (is (= false (igual? '((1 3 5) (1 3 5)) '((1 3 2) (1 3 5)))))
-
 
 )
 
