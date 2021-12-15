@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
   ;(spy "AMBIENTE ACA ES" amb)
 
   ; e.g: (+ 5 3) -> Entra a Cond
@@ -138,7 +138,7 @@
       ;Si no se cumple lo del if, entra al cond
       (cond
         ; e.g: (+ 5 3) -> No entra a evaluar escalar ni es define
-        (not (seq? expre))             (spy "Evaluar escalar devuelve"(evaluar-escalar expre amb))
+        (not (seq? expre))    (evaluar-escalar expre amb)       ;  (spy "Evaluar escalar devuelve"(evaluar-escalar expre amb))
 
         (igual? (first expre) 'cond) (evaluar-cond expre amb)
 
@@ -761,7 +761,7 @@
 (defn actualizar-amb [ambiente, clave, valor]
 (cond
   (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
-  (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
+  (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (spy "nuevo ambiente es"(concat ambiente (list clave valor)))
   (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
 )
@@ -839,8 +839,8 @@
 
 
 (defn igual? [atomo1, atomo2]
-(spy "VERIFICO SI SON IGUALES:" atomo1)
-(spy "VERIFICO SI SON IGUALES:" atomo2)
+;(spy "VERIFICO SI SON IGUALES:" atomo1)
+;(spy "VERIFICO SI SON IGUALES:" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -855,7 +855,7 @@
 
   (and (= (symbol "#t") atomo1) (= (symbol "#T") atomo2)) true
 
-  (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) (spy "Los simbolos son igaules"true)
+  (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true ;(spy "Los simbolos son igaules"true)
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
 
@@ -872,8 +872,8 @@
   :else (let [converted  (re-seq #"\w+" (clojure.string/upper-case atomo1) )
   converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))] 
   (cond
-    (and (= (spy "Convertido es"converted) (spy "convertido 2 es"converted2))
-    (spy "Convertido es"(= false (nil? converted))) (spy "Convertido 2 es"(= false (nil? converted2)))) true
+    (and (= converted converted2)
+    (= false (nil? converted)) (= false (nil? converted2))) true
     :else false
   
   )
@@ -1219,6 +1219,16 @@
 ;"Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
 
 
+
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
+; (a 1 b 2 c 3 d 4)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
+; (a 1 b 4 c 3)
+; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
+; (a 1 b 2 c 3)
+; user=> (actualizar-amb () 'b 7)
+; (b 7)
+;;FAUX
 (defn evaluar-set! [expresion, ambiente]
 (cond
 
@@ -1232,10 +1242,12 @@
 (list (generar-mensaje-error :unbound-variable (nth expresion 1)) ambiente)
 
 
-:else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth expresion 2)))
+:else (list (symbol "#<unspecified>") 
+(actualizar-amb ambiente (nth expresion 1) (spy "set evaluado:"(nth (evaluar (nth expresion 2) ambiente) 0 )  )))
 
 )
 )
+;(nth (evaluar (nth expresion 2) ambiente) 0)
 
 
 ;;Opcional:
