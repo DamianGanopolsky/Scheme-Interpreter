@@ -398,6 +398,7 @@
 (is (= '(a 1 b 4 c 3) (actualizar-amb '(a 1 b 2 c 3) 'b 4)))
 (is (= '(a 1 b 2 c 3) (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))))
 (is (= '(b 7) (actualizar-amb () 'b 7)))
+(is (= '(b 7 inicial ()) (actualizar-amb '(b 7) 'inicial '())))
 )
 
 
@@ -648,6 +649,11 @@
 
   (is (= (list (generar-mensaje-error :missing-or-extra 'define (list 'define '() )) '(x 1))
   (evaluar-define '(define ()) '(x 1))))
+
+  ;(is (= (list (symbol "#<unspecified>") '(x 1 inicial '()))
+  ;(evaluar-define '(define inicial '()) '(x 1))))
+
+ 
 
     (is (= (list (generar-mensaje-error :bad-variable 'define 2) '(x 1))
   (evaluar-define '(define 2 x) '(x 1))))

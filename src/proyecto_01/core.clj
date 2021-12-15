@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
+  (spy "ENTRO A EVALUAR CON EXPRE" expre)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -762,10 +762,13 @@
 
 
 (defn actualizar-amb [ambiente, clave, valor]
+(spy "Entro a actualziar amb con amb" ambiente)
+(spy "Entro a actualziar amb con clave" clave)
+(spy "Entro a actualziar amb con valor" valor)
 (cond
-  (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
+  (and (list? valor) (= false (empty? valor)) (spy "segundo and:"(= (spy " nth valor 0:"(nth valor 0)) (symbol ";ERROR:")))) ambiente
   (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
-  (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
+  (spy "tercera cond"(< -1 (buscarInsensitive clave ambiente 0 (count ambiente)))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
 )
 )
@@ -1189,7 +1192,7 @@
 ; user=> (actualizar-amb () 'b 7)
 
 (defn evaluar-define [expresion, ambiente]
-;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
+(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
@@ -1199,13 +1202,13 @@
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
     ;(= (nth expresion 1) (list 'f 'x)) 
-    (list? (nth expresion 1))
-    (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
+    (spy "Pregunto si es una lista"(list? (nth expresion 1)))
+    (spy "Devuelvo"(list (symbol "#<unspecified>") (parseo-lambda expresion ambiente)))
 
     (= false (symbol? (nth expresion 1))) 
     (list (generar-mensaje-error :bad-variable 'define (nth expresion 1)) ambiente)
 
-    :else (list (symbol "#<unspecified>") (actualizar-amb ambiente (nth expresion 1) (nth (evaluar (nth expresion 2) ambiente) 0)))
+    :else (list (symbol "#<unspecified>") (spy "Actualizo amb me da"(actualizar-amb ambiente (nth expresion 1) (spy "Evaluar me da"(nth (evaluar (spy "Evaluo esto"(nth expresion 2)) ambiente) 0)))))
   )
   
 )
