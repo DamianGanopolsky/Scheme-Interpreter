@@ -215,6 +215,9 @@
 ;(fnc-equal? '((5 0) (5 0)))
 ;#t
 
+;#t (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13))))
+;#t (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13))))
+
 (deftest fnc-equal?-test 
 (testing "Prueba de la funcion: fnc-equal"
 (is (= (symbol "#t") (fnc-equal? ())))
@@ -235,6 +238,13 @@
 (is (= (symbol "#t") (fnc-equal? '((1 3 5) (1 3 5) (1 3 5) (1 3 5)))))
 (is (= (symbol "#t") (fnc-equal? '(((1 3 5) (1 3 5)) ((1 3 5) (1 3 5))))))
 (is (= (symbol "#f") (fnc-equal? '(((1 3 5) (1 3 5)) ((1 3 2) (1 3 5))))))
+(is (= (symbol "#t")) (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13)))) )
+(is (= (symbol "#t")  (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13))))  ))
+(is (= (symbol "#f") (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '15 '13) (list '12 '13) (list '12 '13))))))
+(is (= (symbol "#f") (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '11 '13) (list '12 '13) (list '12 '13))))))
+(is (= (symbol "#f")  (fnc-equal? (list (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '11 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13))))))
+(is (= (symbol "#f") (fnc-equal? (list (list (list '11 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13)) (list (list '12 '13) (list '12 '13) (list '12 '13))))))
+(is (= (symbol "#f") (fnc-equal? '((0 0) (0 0) (0 0) (0 0) (0 0) (0 1) ))))
 )
 )
 
