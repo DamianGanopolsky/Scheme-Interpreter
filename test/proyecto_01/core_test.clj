@@ -356,6 +356,10 @@
 (is (= false (igual? "asd" "ASD")))
 (is (= false (igual? (list "asd" 5) (list "ASD" 5))))
 (is (= true (igual? (list "asd" 5) (list "asd" 5) )))
+(is (= true (igual? '(5 0) '(5 0))))
+(is (= false (igual? '(5 1) '(5 0))))
+(is (= true (igual? '((1 3 5) (1 3 5)) '((1 3 5) (1 3 5)))))
+(is (= false (igual? '((1 3 5) (1 3 5)) '((1 3 2) (1 3 5)))))
 
 
 )
@@ -483,9 +487,27 @@
 ; (#f (#f #f #t #t))
 ; "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
 
+;> (or (if #f #t #f) 1)
+;1
+;> (or (if #f #t #f) #f)
+;#f
+;> (or (if #t #f) 1)
+;1
+;> (or #t)
+;#t
+;> (or #f)
+;#f
+;> (or #f (if #t 1))
+;1
+
 
 (deftest evaluar-or-test
 (testing "Prueba de la forma especial evaluar or")
+
+;> (or (if #f #t #f) 1)
+;1
+;(is (= 1 (evaluar-or (list 'or))))
+;(is (= 1 ) (evaluar-or (list 'or (symbol "#f") 5) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))))
 (is (= (list (symbol "#f") (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t"))) 
 (evaluar-or (list 'or) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))))
 

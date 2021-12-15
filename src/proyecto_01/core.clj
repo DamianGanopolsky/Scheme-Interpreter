@@ -1268,23 +1268,26 @@
 
 
 ; FUNCION AUXILIAR DE EVALUAR-OR
-(defn or-recursivo [expresionOr, iteracion, n]
+(defn or-recursivo [expresionOr, iteracion, n, ambiente]
+;(spy "Entro a or recursivo con expre" expresionOr)
+;(spy "Entro a or recursivo iteracion" iteracion)
+;(spy "Entro a or recursivo n" n)
 (cond
   (= iteracion n) (symbol "#f")
   :else (cond
-    (= (symbol "#f") (nth expresionOr iteracion) ) (or-recursivo expresionOr (+ iteracion 1) n)
-    :else (nth expresionOr iteracion)
+    (= (symbol "#f") (nth (evaluar (nth expresionOr iteracion) ambiente) 0)) (or-recursivo expresionOr (+ iteracion 1) n ambiente)
+    :else (nth (evaluar (nth expresionOr iteracion) ambiente) 0) 
   )
 )
 )
 
 ;Evaluo hasta que aparezca uno distinto de false
 (defn evaluar-or [expresionOr, ambiente]
-
+;(spy "expresionOr es" expresionOr)
 (cond
   (= (count expresionOr) 1) (list (symbol "#f") ambiente) 
   (= (count expresionOr) 2) (list (nth expresionOr 1) ambiente)
-  :else (list (or-recursivo expresionOr 1 (count expresionOr)) ambiente) 
+  :else (list (or-recursivo expresionOr 1 (count expresionOr) ambiente) ambiente) 
 )
   
 )
