@@ -116,7 +116,7 @@
               (let [str-corregida (proteger-bool-en-str renglon),
                     cod-en-str (read-string str-corregida),
                     cod-corregido (restaurar-bool cod-en-str),
-                    res (spy "resultado evaluar"(evaluar cod-corregido amb))]     ; EVAL
+                    res (evaluar cod-corregido amb)]     ; EVAL
                     (if (nil? (second res))              ;   Si el ambiente del resultado es `nil`, es porque se ha evaluado (exit)
                         'Goodbye!                        ;   En tal caso, sale del REPL devolviendo Goodbye!.
                         (do (imprimir (first res))       ; PRINT
@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -180,16 +180,16 @@
 
 	    	:else (let [res-eval-1 (evaluar (first expre) amb),
              						 res-eval-2 (reduce (fn [x y] (let [res-eval-3 (evaluar y (first x))] (cons (second res-eval-3) (concat (next x) (list (first res-eval-3)))))) (cons (list (second res-eval-1)) (next expre)))]
-					              	(spy "resultado exxterno aplicar"(aplicar (spy "Primer elemento evaluar:"(first res-eval-1)) (spy "2do:"(next res-eval-2)) (spy "3ro:"(first res-eval-2))))))))
+					              	(aplicar (first res-eval-1) (next res-eval-2) (first res-eval-2))))))
 
 
 (defn aplicar
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
   ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
-  (spy "ENTRO A APLICAR CON FUNCION" fnc)
-  (spy "ENTRO A APLICAR CON argumentos" lae)
-   (aplicar (spy "revisar fnc:"(revisar-fnc fnc)) (spy "revisar lae:"(revisar-lae lae)) fnc lae amb))
+  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR CON argumentos" lae)
+   (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
    (cond
      (error? resu1) (list resu1 amb)
@@ -199,7 +199,7 @@
      
      ;Una funcion no primitiva tiene fnc algo que no es una secuencia
      ;El resultado va a devolver el 15 y el ambiente
-     (not (seq? fnc)) (spy "Resultado de aplicar"(list (aplicar-funcion-primitiva fnc lae amb) amb))
+     (not (seq? fnc)) (list (aplicar-funcion-primitiva fnc lae amb) amb)
      :else (aplicar-lambda fnc lae amb))))
 
 
@@ -238,7 +238,7 @@
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
-  (spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
   
   (cond
 
@@ -313,12 +313,12 @@
 (defn fnc-cdr
   "Devuelve una lista sin su 1ra. posicion."
   [lae]
-  (spy "LAE AACA ES" lae)
+  ;(spy "LAE AACA ES" lae)
   (let [ari (controlar-aridad-fnc lae 1 'cdr), arg1 (first lae)]
        (cond
-         (error? ari) (spy "devuelvo ari" ari)
+         (error? ari) ari
          (or (not (seq? arg1)) (empty? arg1)) (generar-mensaje-error :wrong-type-arg1 'cdr arg1)
-         :else (spy "RESOT:"(rest arg1)))))
+         :else (rest arg1))))
 
 
 (defn fnc-cons
@@ -403,13 +403,12 @@
 (defn fnc-null?
   "Devuelve #t si un elemento es ()."
   [lae]
-  (spy "Entro a null con lae " lae)
   (let [ari (controlar-aridad-fnc lae 1 'null?)]
        (if (error? ari)
            ari
            (if (= (first lae) ())
-               (spy "FNC-NULL Devuelvo t:"(symbol "#t"))
-               (spy "FNC- NULL Devuelvo f:"(symbol "#f"))))))
+               (symbol "#t")
+               (symbol "#f")))))
 
 
 (defn fnc-reverse
@@ -450,16 +449,16 @@
 (defn revisar-fnc
   "Si la `lis` representa un error lo devuelve; si no, devuelve nil."
   [lis]
-  (spy "revisar fnc ocn lis" lis)
-   (spy "devuelvo en fnc"(if (error?  lis) lis nil)))
+  ;(spy "revisar fnc ocn lis" lis)
+   ;(spy "devuelvo en fnc"(if (error?  lis) lis nil)))
 
 
 (defn revisar-lae
   
   "Si la `lis` contiene alguna sublista que representa un error lo devuelve; si no, devuelve nil."
   [lis]
-  (spy "Revisar lae con lis" lis)
-   (first (spy "resultado remove"(remove nil?(spy "mapeado" (map revisar-fnc (filter seq? lis)))))))
+  ;(spy "Revisar lae con lis" lis)
+   (first (remove nil? (map revisar-fnc (filter seq? lis)))))
 
 
 (defn evaluar-cond
@@ -765,7 +764,7 @@
 (defn actualizar-amb [ambiente, clave, valor]
 (cond
   (and (list? valor) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
-  (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (spy "nuevo ambiente es"(concat ambiente (list clave valor)))
+  (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
   (< -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (apply list(assoc (into [] ambiente) (+ 1 (buscarInsensitive clave ambiente 0 (count ambiente))) valor))
   :else ambiente
 )
@@ -933,6 +932,7 @@
 ;Convierto la lista a string, la paso a mayusculas y la termino convirtiendo en secuencia para poder
 ;applicarle apply
 (defn fnc-equal? [entrada]
+(spy "ENTRO A EQUAL CON" entrada)
 ( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
 (cond
   (empty? entrada) (symbol "#t")
@@ -1236,8 +1236,8 @@
 ; (b 7)
 ;;FAUX
 (defn evaluar-set! [expresion, ambiente]
-(spy "Entro a evaluar set con expresion" expresion)
-(spy "Entro a evaluar set con ambiente" ambiente)
+;(spy "Entro a evaluar set con expresion" expresion)
+;(spy "Entro a evaluar set con ambiente" ambiente)
 (cond
 
 (or (< (count expresion) 3) (> (count expresion) 3))
