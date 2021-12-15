@@ -845,13 +845,13 @@
 ; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
 
 (defn compare-2-lists [list1, list2, i, n]
-(spy "ENTRO A COMPARE-2-LISTS CON " list1)
-(spy "ENTRO A COMPARE-2-LISTS CON " list2)
-(spy "i es " i)
-(spy "n es " n)
-(spy "COMPARE-2-LISTS DEVUELVE"(cond
+;(spy "ENTRO A COMPARE-2-LISTS CON " list1)
+;(spy "ENTRO A COMPARE-2-LISTS CON " list2)
+;(spy "i es " i)
+;(spy "n es " n)
+(cond
 
-  (= false(= (spy "cuenta de 1 es"(count list1)) (spy "cuienta de 2 es"(count list2)))) (symbol "#f")
+  (= false(= (count list1) (count list2))) (symbol "#f")
   (= i n) (symbol "#t")
 
   :else
@@ -862,14 +862,14 @@
   )
 
 
-))
+)
 )
 
 
 (defn igual? [atomo1, atomo2]
-(spy "VERIFICO SI SON IGUALES:" atomo1)
-(spy "VERIFICO SI SON IGUALES:" atomo2)
-(spy "devuelvo"(cond
+;(spy "VERIFICO SI SON IGUALES:" atomo1)
+;(spy "VERIFICO SI SON IGUALES:" atomo2)
+(cond
 
   (and (nil? atomo1) (nil? atomo2)) true
   (nil? atomo1) false
@@ -913,7 +913,7 @@
          
   
   )
-))
+)
 
 )
 
@@ -961,13 +961,13 @@
 ;applicarle apply
 
 (defn compare-2-lists [list1, list2, i, n]
-(spy "ENTRO A COMPARE-2-LISTS CON " list1)
-(spy "ENTRO A COMPARE-2-LISTS CON " list2)
-(spy "i es " i)
-(spy "n es " n)
-(spy "COMPARE-2-LISTS DEVUELVE"(cond
+;(spy "ENTRO A COMPARE-2-LISTS CON " list1)
+;(spy "ENTRO A COMPARE-2-LISTS CON " list2)
+;(spy "i es " i)
+;(spy "n es " n)
+(cond
 
-  (= false(= (spy "cuenta de 1 es"(count list1)) (spy "cuienta de 2 es"(count list2)))) (symbol "#f")
+  (= false(= (count list1) (count list2))) (symbol "#f")
   (= i n) (symbol "#t")
 
   :else
@@ -978,13 +978,13 @@
   )
 
 
-))
+)
 )
 
 (defn eq-recursive [entrada, i, n]
-  (spy "ENTRO A EQ RECURSIVE CON" entrada)
-  (spy "I" i)
-  (spy "N" n)
+  ;(spy "ENTRO A EQ RECURSIVE CON" entrada)
+  ;(spy "I" i)
+  ;(spy "N" n)
   (cond
     (= (+ i 1) n) (symbol "#t")
     :else
@@ -1002,7 +1002,7 @@
 )
 
 (defn fnc-equal? [entrada]
-(spy "ENTRO A EQUAL CON" entrada)
+;(spy "ENTRO A EQUAL CON" entrada)
 (cond
   (empty? entrada) (symbol "#t")
   (list? (nth entrada 0)) (eq-recursive entrada 0  (count entrada))
