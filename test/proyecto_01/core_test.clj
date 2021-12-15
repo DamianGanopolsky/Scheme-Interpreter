@@ -352,6 +352,22 @@
 (is (= true (igual? 'IF 'IF)))
 (is (= false (igual? 'IF "IF")))
 (is (= false (igual? 6 "6")))
+(is (= false (igual? '6 '(6))))
+(is (= false (igual? '(6) '6)))
+(is (= false (igual? '(symbol "#f") (symbol "#f"))))
+(is (= false (igual? '(quote +) 'quote)))
+(is (= false (igual?  'quote '(quote +))))
+
+(is (= false (igual?  (list 'quote) '(quote +))))
+
+(is (= false (igual?  (list 'quote) 'quote)))
+
+(is (= false (igual?  'quote (list 'quote) )))
+
+(is (= true (igual?  (list 'quote) (list 'quote) )))
+
+(is (= true (igual?  (list 'quote '+) (list 'quote '+) )))
+
 (is (= true (igual? '(a (b) c) '(A (B) C) )))
 (is (= false (igual? "asd" "ASD")))
 (is (= false (igual? (list "asd" 5) (list "ASD" 5))))
@@ -594,6 +610,9 @@
 
 (is (= (list (symbol "#<unspecified>") (list 'n '9 (symbol "#f") (symbol "#f"))) 
 (evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))))
+
+(is (= (list (symbol "#<unspecified>") (list 'n '9 (symbol "#f") (symbol "#f"))) 
+(evaluar-if (list 'if (symbol "#t") '(set! n 9) 'n ) (list 'n 7 (symbol "#f") (symbol "#f")))))
 
 (is (= (list (symbol "#<unspecified>") (list 'n '9 (symbol "#f") (symbol "#f"))) 
 (evaluar-if (list 'if (symbol "#t") '(set! n 9) 'n ) (list 'n 7 (symbol "#f") (symbol "#f")))))
