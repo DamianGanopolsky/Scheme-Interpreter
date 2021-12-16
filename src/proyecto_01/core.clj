@@ -376,6 +376,7 @@
 (defn fnc-list?
   "Devuelve #t si un elemento es una lista. Si no, #f."
   [lae]
+  ;(spy "PREGUNTO SI ES LIST EL LAE" lae)
   (let [ari (controlar-aridad-fnc lae 1 'list?), arg1 (first lae)]
        (if (error? ari)
            ari
@@ -878,6 +879,8 @@
 
 
 (defn igual? [atomo1, atomo2]
+;(spy "Entro a igual? con atomo1" atomo1)
+;(spy "Entro a igual? con atomo2" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -909,6 +912,18 @@
   (and (string? atomo1) (string? atomo2)) (= atomo1 atomo2)
   (and (number? atomo1) (string? atomo2)) false
   (and (string? atomo1) (number? atomo2)) false
+
+  (and (and (symbol? atomo1) (symbol? atomo2) ) 
+  (= false (= (count (str atomo1)) (count (str atomo2))))) false
+
+  ;(and (or (= 'LIST? atomo1) (= 'list? atomo1)) (or (= 'LIST atomo2)(= 'list atomo2))) false
+
+  ;(and (or (= 'LIST? atomo2) (= 'list? atomo2)) (or (= 'LIST atomo1)(= 'list atomo1))) false
+
+
+
+  ;(and (= 'list atomo1) (= 'list? atomo2)) false
+
   
   ;(and (symbol? atomo1) (symbol? atomo2) (= false (= atomo1 atomo2))) false
   (and (number? atomo1) (number? atomo2) (= atomo1 atomo2)) true

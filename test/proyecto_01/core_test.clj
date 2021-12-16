@@ -358,6 +358,21 @@
 (is (= false (igual? '(quote +) 'quote)))
 (is (= false (igual?  'quote '(quote +))))
 
+
+(is (= false (igual?  'igual? 'igual)))
+
+(is (= false (igual?  'igual 'igual?)))
+
+(is (= false (igual?  '?igual 'igual)))
+
+(is (= false (igual?  'igual '?igual)))
+
+(is (= false (igual?  'igual '!!igual)))
+
+(is (= false (igual?  'igual 'igual-)))
+
+(is (= false (igual?  'LIST? 'LIST)))
+
 (is (= false (igual?  (list 'quote) '(quote +))))
 
 (is (= false (igual?  'quote (list 'quote '()))))
