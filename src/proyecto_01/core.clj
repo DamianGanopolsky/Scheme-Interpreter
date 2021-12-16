@@ -1008,7 +1008,9 @@
   ;(spy "I" i)
   ;(spy "N" n)
   (cond
+    
     (= (+ i 1) n) (symbol "#t")
+    (= false(seq? (nth entrada (+ i 1))))  (symbol "#f")
     :else
     (cond
       (= (symbol "#t") (compare-2-lists (nth entrada i) (nth entrada (+ i 1)) 0 (count (nth entrada i))))
