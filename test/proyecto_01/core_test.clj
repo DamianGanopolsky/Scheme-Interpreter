@@ -360,6 +360,8 @@
 
 (is (= false (igual?  (list 'quote) '(quote +))))
 
+(is (= false (igual?  'quote (list 'quote '()))))
+
 (is (= false (igual?  (list 'quote) 'quote)))
 
 (is (= false (igual?  'quote (list 'quote) )))

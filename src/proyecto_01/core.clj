@@ -129,7 +129,7 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  (spy "ENTRO A EVALUAR CON EXPRE" expre)
+  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
 
   ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
@@ -153,9 +153,11 @@
 
         (igual? (first expre) 'or) (evaluar-or expre amb)
 
-        (igual? (spy "first EXPRE ES"(first expre)) 'quote) (spy "entro a evaluar quote y devuelve"(evaluar-quote expre amb))
+        (igual? (first expre) 'quote) (evaluar-quote expre amb)
 
         (igual? (first expre) 'set!) (evaluar-set! expre amb)
+
+        (igual? (first expre) 'eval) (evaluar-eval expre amb)
 
 
          ;
@@ -187,8 +189,8 @@
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
   ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
-  (spy "ENTRO A APLICAR CON FUNCION" fnc)
-  (spy "ENTRO A APLICAR CON argumentos" lae)
+  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR CON argumentos" lae)
    (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
    (cond
@@ -238,7 +240,8 @@
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
-  (spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
+  ;(spy "ENTRO A APLICAR PRIMITIVA CON ARGUMENTOS EVALUADOS:" lae)
   
   (cond
 
@@ -303,6 +306,7 @@
 (defn fnc-car
   "Devuelve el primer elemento de una lista."
   [lae]
+  ;(spy "Entro a car con lae:" lae)
   (let [ari (controlar-aridad-fnc lae 1 'car), arg1 (first lae)]
        (cond
          (error? ari) ari
@@ -324,6 +328,7 @@
 (defn fnc-cons
   "Devuelve el resultado de insertar un elemento en la cabeza de una lista."
   [lae]
+  ;(spy "ENTRO A CONS CON ARGS:" lae)
   (let [ari (controlar-aridad-fnc lae 2 'cons), arg1 (first lae), arg2 (second lae)]
        (cond
          (error? ari) ari
@@ -405,12 +410,12 @@
   
   [lae]
   ;(spy "ENTRO A FNC-NULL?")
-  (spy "FNC NULL ME DEVUELVE"(let [ari (controlar-aridad-fnc lae 1 'null?)]
+  (let [ari (controlar-aridad-fnc lae 1 'null?)]
        (if (error? ari)
            ari
            (if (= (first lae) ())
                (symbol "#t")
-               (symbol "#f"))))))
+               (symbol "#f")))))
 
 
 (defn fnc-reverse
@@ -592,7 +597,7 @@
 (defn evaluar-quote
   "Evalua una expresion `quote`."
   [expre amb]
-  (spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
+  ;(spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
   ;(spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
   (if (not= (count expre) 2) ; si no son el operador y exactamente 1 argumento
       (list (generar-mensaje-error :missing-or-extra 'quote expre) amb)
@@ -873,8 +878,6 @@
 
 
 (defn igual? [atomo1, atomo2]
-(spy "VERIFICO SI SON IGUALES:" atomo1)
-(spy "VERIFICO SI SON IGUALES:" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -894,7 +897,7 @@
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
   ;Si son listas, uso la funcion que me arme para compararlas
-  (and (spy "El ELEMENTO 1 ES SECUENCIA:"(seq? atomo1)) (spy "el ELEMENTO 2 ES SEC:"(seq? atomo2))) 
+  (and (seq? atomo1) (seq? atomo2)) 
   (= (symbol "#t")(compare-2-lists atomo1 atomo2 0 (count atomo1)))
 
   ;Si uno de los 2 es sec y el otro no -> Entonces no son iguales
@@ -913,7 +916,7 @@
   :else (let [converted  (re-seq #"\w+" (clojure.string/upper-case atomo1) )
   converted2 (re-seq #"\w+" (clojure.string/upper-case atomo2))] 
   (cond
-    (and (= (spy "convertido 1 me da"converted) (spy "conv 2 me da"converted2))
+    (and (= converted converted2)
     (= false (nil? converted)) (= false (nil? converted2))) true
     :else false
   )
@@ -1042,7 +1045,7 @@
 
 
 (defn fnc-sumar [entrada]
-(spy "SUMO LA ENTRADA:" entrada)
+;(spy "SUMO LA ENTRADA:" entrada)
 (cond
   (empty? entrada) 0
   (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '+ (nth entrada 0))
