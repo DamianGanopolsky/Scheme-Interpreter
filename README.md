@@ -1,6 +1,6 @@
 # Scheme Interpreter 
 
-The idea for this project is to develop a Scheme Interpreter using a recursive interpretation and a functional language (Clojure). A wide range of functions and operators that are used natively in Scheme, can be now executed using this interpreter.
+The idea behind this project is to develop a Scheme Interpreter using a recursive interpretation and a functional language (Clojure). A wide range of functions and operators that are used natively in Scheme, can be now executed using this interpreter.
 
 #### Requirements
 
