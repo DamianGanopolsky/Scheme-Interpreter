@@ -2,6 +2,10 @@
 
 The idea for this project is to develop a Scheme Interpreter using a recursive interpretation and a functional language (Clojure). A wide range of functions and operators that are used natively in Scheme, can be now executed using this interpreter.
 
+#### Requirements
+
+Last version of Leiningen installed: https://leiningen.org/
+
 ### Execution
 
 You can run the interpreter by executing the command "lein run" in the repository root. Once the interpreter is running, you can use all the functions that are being interpreted.
@@ -24,6 +28,8 @@ Exito !!!
 Prof ....... 11  
 Solucion ... ((0 0) (5 0) (0 5) (5 5) (2 8) (2 0) (0 2) (5 2) (0 7) (5 7) (4 8) (4 0))  
 #t  
+
+You can find more information about this puzzle in: https://en.wikipedia.org/wiki/Water_pouring_puzzle
 
 
 ### Tests
