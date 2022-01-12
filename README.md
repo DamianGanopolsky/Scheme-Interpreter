@@ -1,44 +1,15 @@
-# proyecto-01
+# Scheme Interpreter 
 
-FIXME: description
+The idea for this project is to develop a Scheme Interpreter using a recursive interpretation and a functional language (Clojure). A wide range of functions and operators that are used natively in Scheme, can be now executed using this interpreter.
 
-## Installation
 
-Download from http://example.com/FIXME.
+### Tests
 
-## Usage
+I've made 177 unit tests in order to test in detail the functionalities of the project, they are located in the test/ folder. In case you want to run those tests, you need to execute the command "lein test" in the repository root.
 
-FIXME: explanation
+### Run interpreter
 
-    $ java -jar proyecto-01-0.1.0-standalone.jar [args]
+You can run the interpreter by executing the command "lein run" in the repository root. Once the interpreter is running, you can use all the functions that are being interpreted.
+The file "demo.scm" contains a large set of scheme functions, you can load the file by running "(load "demo")", once it is loaded, it will provide an output in order to get some insight from the execution of the functions.
 
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2021 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+You can also load "jarras.scm"
