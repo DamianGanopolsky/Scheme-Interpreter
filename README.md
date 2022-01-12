@@ -28,7 +28,7 @@ Solucion ... ((0 0) (5 0) (0 5) (5 5) (2 8) (2 0) (0 2) (5 2) (0 7) (5 7) (4 8) 
 
 ### Tests
 
-I've made 177 unit tests in order to test in detail the functionalities of the project, they are located in the test/ folder. In case you want to run those tests, you need to execute the command "lein test" in the repository root.
+Several unit tests were made in order to test in detail the functionalities of the project, they are located in the test/ folder. In case you want to run those tests, you need to execute the command "lein test" in the repository root.
 
 > lein test  
 Ran 21 tests containing 177 assertions.  
