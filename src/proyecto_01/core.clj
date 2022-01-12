@@ -129,15 +129,12 @@
 (defn evaluar
   "Evalua una expresion `expre` en un ambiente. Devuelve un lista con un valor resultante y un ambiente."
   [expre amb]
-  ;(spy "ENTRO A EVALUAR CON EXPRE" expre)
 
-  ; e.g: (+ 5 3) -> Entra a Cond
   (if (and (seq? expre) (or (empty? expre) (error? expre))) ; si `expre` es () o error, devolverla intacta
       (list expre amb)                                      ; de lo contrario, evaluarla
-      ;Si no se cumple lo del if, entra al cond
       (cond
-        ; e.g: (+ 5 3) -> No entra a evaluar escalar ni es define
-        (not (seq? expre))    (evaluar-escalar expre amb)       ;  (spy "Evaluar escalar devuelve"(evaluar-escalar expre amb))
+
+        (not (seq? expre))    (evaluar-escalar expre amb)      
 
         (igual? (first expre) 'cond) (evaluar-cond expre amb)
 
@@ -166,19 +163,7 @@
          ; Si la expresion no es la aplicacion de una funcion (es una forma especial, una macro...) debe ser evaluada
          ; por una funcion de Clojure especifica debido a que puede ser necesario evitar la evaluacion de los argumentos
          ;
-         ;
-         ;
-         ;Clase: Aca van a estar los que vamos a hacer nosotros: evaluar-or, evaluar-define, etc
 
-        ; En el ambiente -> '+ me da +. Pero despues si modifico una variable por ej, 'x me va a dar 9 o
-        ; un lambda
-
-         ; e.g: (+ 5 3) -> Se llama a aplicar con las 2 partes evaluadas. La cabeza es solo el +,
-         ;la evaluacion del +,vuelve a ser el +. Evaluo el cuerpo -> 5 me da 5 y 3 me da 3.
-         ; Llamo a aplicar con + 
-
-         ;res-eval-2 -> Los argumentos evaluados usando reduce (de izq a derecha). Un argumento puede
-         ;tener un set y eso afecta a los que quedan de la derecha.
 
 	    	:else (let [res-eval-1 (evaluar (first expre) amb),
              						 res-eval-2 (reduce (fn [x y] (let [res-eval-3 (evaluar y (first x))] (cons (second res-eval-3) (concat (next x) (list (first res-eval-3)))))) (cons (list (second res-eval-1)) (next expre)))]
@@ -187,10 +172,7 @@
 
 (defn aplicar
   "Aplica la funcion `fnc` a la lista de argumentos `lae` evaluados en el ambiente dado."
-  ;e.g: (+ 5 3) -> Llamo a aplicar con el + como fnc, y la lista de args es ( 5 3)
   ([fnc lae amb]
-  ;(spy "ENTRO A APLICAR CON FUNCION" fnc)
-  ;(spy "ENTRO A APLICAR CON argumentos" lae)
    (aplicar (revisar-fnc fnc) (revisar-lae lae) fnc lae amb))
   ([resu1 resu2 fnc lae amb]
    (cond
@@ -199,8 +181,7 @@
      ;Si hay un error aca -> Devuelvo el error
      ;Sino -> Me fijo si es una funcion primitiva o un lambda
      
-     ;Una funcion no primitiva tiene fnc algo que no es una secuencia
-     ;El resultado va a devolver el 15 y el ambiente
+
      (not (seq? fnc)) (list (aplicar-funcion-primitiva fnc lae amb) amb)
      :else (aplicar-lambda fnc lae amb))))
 
@@ -240,8 +221,6 @@
 (defn aplicar-funcion-primitiva
   "Aplica una funcion primitiva a una `lae` (lista de argumentos evaluados)."
   [fnc lae amb]
-  ;(spy "ENTRO A APLICAR PRIMITIVA CON FUNCION" fnc)
-  ;(spy "ENTRO A APLICAR PRIMITIVA CON ARGUMENTOS EVALUADOS:" lae)
   
   (cond
 
@@ -272,12 +251,9 @@
 
     (igual? fnc 'display) (fnc-display lae)
 
-    ; ENV
     (igual? fnc 'env) (fnc-env lae amb) 
 
     (igual? fnc 'equal?) (fnc-equal? lae)
-
-    ; EVAL es un evaluar, no una funcion primitiva
 
     (igual? fnc 'length) (fnc-length lae)
 
@@ -376,7 +352,6 @@
 (defn fnc-list?
   "Devuelve #t si un elemento es una lista. Si no, #f."
   [lae]
-  ;(spy "PREGUNTO SI ES LIST EL LAE" lae)
   (let [ari (controlar-aridad-fnc lae 1 'list?), arg1 (first lae)]
        (if (error? ari)
            ari
@@ -408,9 +383,7 @@
 
 (defn fnc-null?
   "Devuelve #t si un elemento es ()."
-  
   [lae]
-  ;(spy "ENTRO A FNC-NULL?")
   (let [ari (controlar-aridad-fnc lae 1 'null?)]
        (if (error? ari)
            ari
@@ -457,15 +430,12 @@
 (defn revisar-fnc
   "Si la `lis` representa un error lo devuelve; si no, devuelve nil."
   [lis]
-  ;(spy "revisar fnc ocn lis" lis)
    (if (error?  lis) lis nil))
 
 
 (defn revisar-lae
-  
   "Si la `lis` contiene alguna sublista que representa un error lo devuelve; si no, devuelve nil."
   [lis]
-  ;(spy "Revisar lae con lis" lis)
    (first (remove nil? (map revisar-fnc (filter seq? lis)))))
 
 
@@ -598,8 +568,6 @@
 (defn evaluar-quote
   "Evalua una expresion `quote`."
   [expre amb]
-  ;(spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
-  ;(spy "ENTRO A EVALUAR QUOTE CON EXPRE:" expre)
   (if (not= (count expre) 2) ; si no son el operador y exactamente 1 argumento
       (list (generar-mensaje-error :missing-or-extra 'quote expre) amb)
        (list (second expre) amb)))
@@ -640,10 +608,9 @@
          ())))))
 
 
+
+
 ; FUNCIONES QUE DEBEN SER IMPLEMENTADAS PARA COMPLETAR EL INTERPRETE DE SCHEME (ADEMAS DE COMPLETAR `EVALUAR` Y `APLICAR-FUNCION-PRIMITIVA`):
-
-
-
 
 
 
@@ -678,17 +645,6 @@
 
 
 
-; user=> (verificar-parentesis "(hola 'mundo")
-; 1
-; user=> (verificar-parentesis "(hola '(mundo)))")
-; -1
-; user=> (verificar-parentesis "(hola '(mundo) () 6) 7)")
-; -1
-; user=> (verificar-parentesis "(hola '(mundo) () 6) 7) 9)")
-; -1
-; user=> (verificar-parentesis "(hola '(mundo) )")
-; 0
-
 ;                     Funciones auxiliares para verificar-parentesis
 
 ;A partir de un texto, me devuelve cada caracter como elemento de una seq, a excepcion de los espacios
@@ -722,41 +678,15 @@
   (balanceado? (obtainRawSeq texto) 0 0 (count (obtainRawSeq texto)))
 )
 
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
-; (a 1 b 2 c 3 d 4)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
-; (a 1 b 4 c 3)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
-; (a 1 b 2 c 3)
-; user=> (actualizar-amb () 'b 7)
-; (b 7)
-;;FAUX
-; Clase: "Los errores son listas que tienen en la primera posicion el simbolo de error"
-
-; FUNCION AUXILIAR 
-(defn in? 
-  "true si la lista contiene el elemento"
-  [coll elm]  
-  (some #(= elm %) coll))
 
 
 
-;Devuelve -1 si no encuentra la clave en el ambiente, sino devuelve la clave
-
-; FUNCION AUXILIAR DE ACTUALIZAR-AMB
-(defn buscarUtil [clave, ambiente]
-(cond
-  (nil? (in? (take-nth 2 ambiente) clave)) -1
-  :else   (.indexOf (take-nth 2 ambiente) clave)
-)
-)
 
 
+
+; Funcion auxiliar
 
 (defn buscarInsensitive [clave, ambiente, i, n]
-;(spy "b insensitive con clave" clave)
-;(spy "i es " i)
-;(spy "n es" n)
 (cond
   (= n i) -1
 
@@ -764,16 +694,12 @@
 
   :else (buscarInsensitive clave ambiente (+ i 1) n)
 )
-
 )
 
 
 
 
 (defn actualizar-amb [ambiente, clave, valor]
-;(spy "Entro a actualziar amb con amb" ambiente)
-;(spy "Entro a actualziar amb con clave" clave)
-;(spy "Entro a actualziar amb con valor" valor)
 (cond
   (and (seq? valor) (= false (empty? valor)) (= (nth valor 0) (symbol ";ERROR:"))) ambiente
   (= -1 (buscarInsensitive clave ambiente 0 (count ambiente))) (concat ambiente (list clave valor))
@@ -782,17 +708,10 @@
 )
 )
 
-; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))
-; 3
-; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
-; (;ERROR: unbound variable: f)
 
 
 (defn buscar [clave, ambiente]
 (cond
-  ;(nil? (in? (take-nth 2 ambiente) clave)) (generar-mensaje-error :unbound-variable clave)
-  ;:else   (nth (take-nth 2 (rest ambiente))(.indexOf (take-nth 2 ambiente) clave))
-
   (= -1(buscarInsensitive clave (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente)))) 
   (generar-mensaje-error :unbound-variable clave)
 
@@ -805,10 +724,8 @@
 
 ;"Devuelve true o false, segun sea o no el arg. una lista con `;ERROR:` o `;WARNING:` como primer elemento."
 (defn error?  [entrada]
-  ;(spy "ES UN ERROR ESTA ENTRADA?" entrada)
   (cond
   (= false (seq? entrada)) false
-  ;(= false (coll? entrada)) false
   (= '() entrada) false
   (empty? entrada) false
   (= (nth entrada 0) (symbol ";WARNING:")) true
@@ -817,21 +734,12 @@
   ) 
 )
 
-; user=> (proteger-bool-en-str "(or #F #f #t #T)")
-; "(or %F %f %t %T)"
-; user=> (proteger-bool-en-str "(and (or #F #f #t #T) #T)")
-; "(and (or %F %f %t %T) %T)"
-; user=> (proteger-bool-en-str "")
-; ""
-;"Cambia, en una cadena, #t por %t y #f por %f (y sus respectivas versiones en mayusculas), para poder aplicarle read-string."
+
 (defn proteger-bool-en-str [entrada]
   (clojure.string/replace entrada #"#F|#T|#f|#t" {"#F" "%F" "#T" "%T" "#f" "%f" "#t" "%t"})  
 )
 
-; user=> (restaurar-bool (read-string (proteger-bool-en-str "(and (or #F #f #t #T) #T)")))
-; (and (or #F #f #t #T) #T)
-; user=> (restaurar-bool (read-string "(and (or %F %f %t %T) %T)") )
-; (and (or #F #f #t #T) #T)
+
 ;"Cambia, en un codigo leido con read-string, %t por #t y %f por #f (y sus respectivas versiones en mayusculas)."
 
 ;Le paso la cadena protegida, leida como read string. Lo primero que hago es convertir esa entrada a string,
@@ -844,25 +752,11 @@
 {"%F" ":%F" "%T" ":%T" "%f" ":%f" "%t" ":%t"})))  
 )
 
-; user=> (igual? 'if 'IF)
-; true
-; user=> (igual? 'if 'if)
-; true
-; user=> (igual? 'IF 'IF)
-; true
-; user=> (igual? 'IF "IF")
-; false
-; user=> (igual? 6 "6")
-; false
+
 ; "Verifica la igualdad entre dos elementos al estilo de Scheme (case-insensitive)"
 
 (defn compare-2-lists [list1, list2, i, n]
-;(spy "ENTRO A COMPARE-2-LISTS CON " list1)
-;(spy "ENTRO A COMPARE-2-LISTS CON " list2)
-;(spy "i es " i)
-;(spy "n es " n)
 (cond
-
   (= false(= (count list1) (count list2))) (symbol "#f")
   (= i n) (symbol "#t")
 
@@ -870,17 +764,12 @@
   (cond
       (igual? (nth list1 i) (nth list2 i)) (compare-2-lists list1 list2 (+ i 1) n)
       :else (symbol "#f")
-
   )
-
-
 )
 )
 
 
 (defn igual? [atomo1, atomo2]
-;(spy "Entro a igual? con atomo1" atomo1)
-;(spy "Entro a igual? con atomo2" atomo2)
 (cond
 
   (and (nil? atomo1) (nil? atomo2)) true
@@ -899,6 +788,7 @@
   (and (symbol? atomo1) (symbol? atomo2) (= atomo1 atomo2)) true ;(spy "Los simbolos son igaules"true)
 
   (or (= (symbol "#f") atomo1) (= (symbol "#f") atomo2)) false
+
   ;Si son listas, uso la funcion que me arme para compararlas
   (and (seq? atomo1) (seq? atomo2)) 
   (= (symbol "#t")(compare-2-lists atomo1 atomo2 0 (count atomo1)))
@@ -915,17 +805,6 @@
 
   (and (and (symbol? atomo1) (symbol? atomo2) ) 
   (= false (= (count (str atomo1)) (count (str atomo2))))) false
-
-  ;(and (or (= 'LIST? atomo1) (= 'list? atomo1)) (or (= 'LIST atomo2)(= 'list atomo2))) false
-
-  ;(and (or (= 'LIST? atomo2) (= 'list? atomo2)) (or (= 'LIST atomo1)(= 'list atomo1))) false
-
-
-
-  ;(and (= 'list atomo1) (= 'list? atomo2)) false
-
-  
-  ;(and (symbol? atomo1) (symbol? atomo2) (= false (= atomo1 atomo2))) false
   (and (number? atomo1) (number? atomo2) (= atomo1 atomo2)) true
   (and (number? atomo1) (number? atomo2) (= false (= atomo1 atomo2))) false
   :else (let [converted  (re-seq #"\w+" (clojure.string/upper-case atomo1) )
@@ -939,74 +818,30 @@
 )
 )
 
-;(defn igual-recursivo? [elemento1, elemento2, n, i]
-;(cond
- ; (= n i) (true)
-  ;(= false (igu? (nth elemento1 i) (nth elemento2 i))) (false) 
-  ;(and (string? (nth elemento1 i)) (symbol? (nth elemento2 i))) (false)
-  ;(and (symbol? (nth elemento1 i)) (string? (nth elemento2 i))) (false)
-  ;(and (string? (nth elemento1 i)) (string? (nth elemento2 i))) (= (nth elemento1 i) (nth elemento2 i))
-  
-  ;(and (and (list? elemento1) (list? elemento2)) (= (count elemento1) (count elemento2))) 
-  ;(igual-recursivo? elemento1 elemento2 (count elemento1) 0)
 
-  ;:else (igual-recursivo? elemento1 elemento2 n (+ i 1))
-;)
-;)
-
-;(defn igual? [elemento1, elemento2]
-;(cond
- ; (and (and (list? elemento1) (list? elemento2)) (= (count elemento1) (count elemento2))) 
- ; (igual-recursivo? elemento1 elemento2 (count elemento1) 0)
-  
-  ;:else (igu? elemento1 elemento2)
-;)
-;)
-
-; user=> (fnc-append '( (1 2) (3) (4 5) (6 7)))
-; (1 2 3 4 5 6 7)
-; user=> (fnc-append '( (1 2) 3 (4 5) (6 7)))
-; (;ERROR: append: Wrong type in arg 3)
-; user=> (fnc-append '( (1 2) A (4 5) (6 7)))
-; (;ERROR: append: Wrong type in arg A)
-;"Devuelve el resultado de fusionar listas."
 (defn fnc-append [entrada]
 ( cond
    (some false? (map seq? entrada)) (generar-mensaje-error :wrong-type-arg 'append (nth entrada (.indexOf (map seq? entrada) false)))
   :else (apply concat entrada)
 )
-  
 )
 
 
-;Convierto la lista a string, la paso a mayusculas y la termino convirtiendo en secuencia para poder
-;applicarle apply
-
 (defn compare-2-lists [list1, list2, i, n]
-;(spy "ENTRO A COMPARE-2-LISTS CON " list1)
-;(spy "ENTRO A COMPARE-2-LISTS CON " list2)
-;(spy "i es " i)
-;(spy "n es " n)
 (cond
 
   (= false(= (count list1) (count list2))) (symbol "#f")
   (= i n) (symbol "#t")
-
   :else
   (cond
       (igual? (nth list1 i) (nth list2 i)) (compare-2-lists list1 list2 (+ i 1) n)
       :else (symbol "#f")
-
   )
-
 
 )
 )
 
 (defn eq-recursive [entrada, i, n]
-  ;(spy "ENTRO A EQ RECURSIVE CON" entrada)
-  ;(spy "I" i)
-  ;(spy "N" n)
   (cond
     
     (= (+ i 1) n) (symbol "#t")
@@ -1017,23 +852,16 @@
       (eq-recursive entrada (+ i 1) n)
 
       :else (symbol "#f")
-    
     )
-
   )
-  ;(compare-2-lists (nth entrada 0) (nth entrada 1) 0 (count (nth entrada 0)))
-
 )
 
 (defn fnc-equal? [entrada]
-;(spy "ENTRO A EQUAL CON" entrada)
 (cond
   (empty? entrada) (symbol "#t")
   (seq? (nth entrada 0)) (eq-recursive entrada 0  (count entrada))
   :else   ( let [converted (re-seq #"\w+" (clojure.string/upper-case entrada) )]
-  ;(spy "Converted es" converted)
   (cond
-    
     (= 1 (count entrada)) (symbol "#t")
     (apply = converted) (symbol "#t")
     :else (symbol "#f")
@@ -1062,7 +890,6 @@
 
 
 (defn fnc-sumar [entrada]
-;(spy "SUMO LA ENTRADA:" entrada)
 (cond
   (empty? entrada) 0
   (= false(nth (map number? entrada) 0 )) (generar-mensaje-error :wrong-type-arg1 '+ (nth entrada 0))
@@ -1122,68 +949,16 @@
   
 )
 
-
-;BUSCAr:
-;; user=> (buscar 'c '(a 1 b 2 c 3 d 4 e 5))
-; 3
-; user=> (buscar 'f '(a 1 b 2 c 3 d 4 e 5))
-; (;ERROR: unbound variable: f)
-  ;"Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...]
-   ;y devuelve el valor asociado. Devuelve un error :unbound-variable si no la encuentra."
-
-
-; user=> (evaluar-escalar 32 '(x 6 y 11 z "hola"))
-; (32 (x 6 y 11 z "hola"))
-; user=> (evaluar-escalar "chau" '(x 6 y 11 z "hola"))
-; ("chau" (x 6 y 11 z "hola"))
-; user=> (evaluar-escalar 'y '(x 6 y 11 z "hola"))
-; (11 (x 6 y 11 z "hola"))
-; user=> (evaluar-escalar 'z '(x 6 y 11 z "hola"))
-; ("hola" (x 6 y 11 z "hola"))
-; user=> (evaluar-escalar 'n '(x 6 y 11 z "hola"))
-; ((;ERROR: unbound variable: n) (x 6 y 11 z "hola"))
-
-
   ;"Evalua una expresion escalar. Devuelve una lista con el resultado y un ambiente."
 (defn evaluar-escalar [escalar, ambiente]
-;(spy "ENTRO A EVALUAR ESCALAR con el simbolo:" escalar)
-;(spy "AMBIENTE E")
 (cond
-;(= -1 (buscarInsensitive escalar (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente))))
 (and (symbol? escalar) (= -1 (buscarInsensitive escalar (take-nth 2 ambiente) 0 (count (take-nth 2 ambiente))))) 
 (list (generar-mensaje-error :unbound-variable escalar) ambiente)
 (symbol? escalar) (list (buscar escalar ambiente) ambiente)
 
 :else (list escalar ambiente)
-
 )
-
 )
-
-;Ejemplo consultas:
-;(define (f x) (+ x 1))
-
-;Se puede ver como:(lambda (x) (+ x 1))
-
-;Evaluandola con 6: (f 6)
-;( (lambda (x) (+ x 1)) 6)
-;7
-
-
-; user=> (evaluar-define '(define x 2) '(x 1))
-; (#<unspecified> (x 2))
-; user=> (evaluar-define '(define (f x) (+ x 1)) '(x 1))
-; (#<unspecified> (x 1 f (lambda (x) (+ x 1))))
-
-; user=> (evaluar-define '(define () 2) '(x 1))
-; ((;ERROR: define: bad variable (define () 2)) (x 1))
-; user=> (evaluar-define '(define 2 x) '(x 1))
-; ((;ERROR: define: bad variable (define 2 x)) (x 1))
-; Otro test que se comento en las consultas:
-; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
-; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
-;"Evalua una expresion `define`. Devuelve una lista con el resultado y un ambiente actualizado con la definicion."
-
 
 
 ; FUNCION AUXILIAR DE EVALUAR-DEFINE
@@ -1193,28 +968,12 @@
 
 ; FUNCION AUXILIAR DE EVALUAR-DEFINE
 (defn parseo-lambda [expresion, ambiente]
-
-  ;(spy "Expresion es" expresion)
-
   (concatenar ambiente (nth (nth expresion 1) 0) 
   (concat(list 'lambda  (for [j (range 1 (count (nth expresion 1)))] (nth (nth expresion 1) j))) 
   (for [i (range 2 (count expresion))] (nth expresion i))))
 )
 
-; Otro test que se comento en las consultas:
-; user=>  (evaluar-define '(define (f x) (display x) (newline) (+ x 1)) '(x 1))
-; (#<unspecified> (x 1 f (lambda (x) (display x) (newline) (+ x 1))))
-
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
-; (a 1 b 2 c 3 d 4)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
-; (a 1 b 4 c 3)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
-; (a 1 b 2 c 3)
-; user=> (actualizar-amb () 'b 7)
-
 (defn evaluar-define [expresion, ambiente]
-;(spy "EXPRESION A EVALUAR-DEFINE ES" expresion)
   (cond
 
     (< (count expresion) 3)
@@ -1223,7 +982,6 @@
     (and (> (count expresion) 3) (= false (seq? (nth expresion 1)))) 
     (list (generar-mensaje-error :missing-or-extra 'define expresion) ambiente)
 
-    ;(= (nth expresion 1) (list 'f 'x)) 
     (seq? (nth expresion 1))
     (list (symbol "#<unspecified>") (parseo-lambda expresion ambiente))
 
@@ -1235,28 +993,9 @@
   
 )
 
-; user=> (evaluar-if '(if 1 2) '(n 7))
-; (2 (n 7))
-; user=> (evaluar-if '(if 1 n) '(n 7))
-; (7 (n 7))
-; user=> (evaluar-if '(if 1 n 8) '(n 7))
-; (7 (n 7))
-; user=> (evaluar-if (list 'if (symbol "#f") 'n) (list 'n 7 (symbol "#f") (symbol "#f")))
-; (#<unspecified> (n 7 #f #f))
-; user=> (evaluar-if (list 'if (symbol "#f") 'n 8) (list 'n 7 (symbol "#f") (symbol "#f")))
-; (8 (n 7 #f #f))
-; user=> (evaluar-if (list 'if (symbol "#f") 'n '(set! n 9)) (list 'n 7 (symbol "#f") (symbol "#f")))
-; (#<unspecified> (n 9 #f #f))
-; user=> (evaluar-if '(if) '(n 7))
-; ((;ERROR: if: missing or extra expression (if)) (n 7))
-;(Se le pasaron 0 argumentos, error)
-; user=> (evaluar-if '(if 1) '(n 7))
-; ((;ERROR: if: missing or extra expression (if 1)) (n 7))
-;(Se le paso solo 1 elemento)
 
 ;"Evalua una expresion `if`. Devuelve una lista con el resultado y un ambiente eventualmente modificado."
 (defn evaluar-if [expresion, ambiente]
-;(spy "ENTRO A EVALUAR IF CON EXPRESION" expresion)
   (cond
   (or (< (count expresion) 3) (> (count expresion) 4))
   (list (generar-mensaje-error :missing-or-extra 'if expresion) ambiente)
@@ -1279,24 +1018,8 @@
 )
 )
 
-; user=> (evaluar-or (list 'or) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
-; (#f (#f #f #t #t))
-; user=> (evaluar-or (list 'or (symbol "#t")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
-; (#t (#f #f #t #t))
-; user=> (evaluar-or (list 'or 7) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
-; (7 (#f #f #t #t))
-; user=> (evaluar-or (list 'or (symbol "#f") 5) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
-; (5 (#f #f #t #t))
-; user=> (evaluar-or (list 'or (symbol "#f")) (list (symbol "#f") (symbol "#f") (symbol "#t") (symbol "#t")))
-; (#f (#f #f #t #t))
-; "Evalua una expresion `or`.  Devuelve una lista con el resultado y un ambiente."
-
-
 ; FUNCION AUXILIAR DE EVALUAR-OR
 (defn or-recursivo [expresionOr, iteracion, n, ambiente]
-;(spy "Entro a or recursivo con expre" expresionOr)
-;(spy "Entro a or recursivo iteracion" iteracion)
-;(spy "Entro a or recursivo n" n)
 (cond
   (= iteracion n) (symbol "#f")
   :else (cond
@@ -1308,7 +1031,6 @@
 
 ;Evaluo hasta que aparezca uno distinto de false
 (defn evaluar-or [expresionOr, ambiente]
-;(spy "expresionOr es" expresionOr)
 (cond
   (= (count expresionOr) 1) (list (symbol "#f") ambiente) 
   (= (count expresionOr) 2) (list (nth expresionOr 1) ambiente)
@@ -1317,32 +1039,8 @@
   
 )
 
-; user=> (evaluar-set! '(set! x 1) '(x 0))
-; (#<unspecified> (x 1))
-; user=> (evaluar-set! '(set! x 1) '())
-; ((;ERROR: unbound variable: x) ())
-; user=> (evaluar-set! '(set! x) '(x 0))
-; ((;ERROR: set!: missing or extra expression (set! x)) (x 0))
-; user=> (evaluar-set! '(set! x 1 2) '(x 0))
-; ((;ERROR: set!: missing or extra expression (set! x 1 2)) (x 0))
-; user=> (evaluar-set! '(set! 1 2) '(x 0))
-; ((;ERROR: set!: bad variable 1) (x 0))
-;"Evalua una expresion `set!`. Devuelve una lista con el resultado y un ambiente actualizado con la redefinicion."
 
-
-
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'd 4)
-; (a 1 b 2 c 3 d 4)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b 4)
-; (a 1 b 4 c 3)
-; user=> (actualizar-amb '(a 1 b 2 c 3) 'b (list (symbol ";ERROR:") 'mal 'hecho))
-; (a 1 b 2 c 3)
-; user=> (actualizar-amb () 'b 7)
-; (b 7)
-;;FAUX
 (defn evaluar-set! [expresion, ambiente]
-;(spy "Entro a evaluar set con expresion" expresion)
-;(spy "Entro a evaluar set con ambiente" ambiente)
 (cond
 
 (or (< (count expresion) 3) (> (count expresion) 3))
@@ -1354,13 +1052,10 @@
 (= -1(buscarInsensitive (nth expresion 1) ambiente 0 (count ambiente))) 
 (list (generar-mensaje-error :unbound-variable (nth expresion 1)) ambiente)
 
-
 :else (list (symbol "#<unspecified>") 
 (actualizar-amb ambiente (nth expresion 1) (nth (evaluar (nth expresion 2) ambiente) 0 )  ))
-
 )
 )
-;(nth (evaluar (nth expresion 2) ambiente) 0)
 
 
 ;;Opcional:
